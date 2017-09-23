@@ -27,6 +27,7 @@ class PlayState extends FlxState
     override public function update(elapsed:Float):Void
     {
         FlxG.collide(player, map);
+        Controls.controller = FlxG.gamepads.getByID(0);
         super.update(elapsed);
     }
 }

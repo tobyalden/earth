@@ -4,8 +4,6 @@ import flixel.*;
 import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
-import flixel.input.gamepad.*;
-import flixel.input.keyboard.*;
 
 
 class Player extends FlxSprite
@@ -22,16 +20,6 @@ class Player extends FlxSprite
     public static inline var GROUND_DRAG = 2000;
     public static inline var TERMINAL_VELOCITY = 300;
     public static inline var SHOT_COOLDOWN = 0.5;
-    public static inline var DEAD_ZONE = 0.25;
-
-    public static var P1_CONTROLS = [
-        'up'=>FlxKey.UP,
-        'down'=>FlxKey.DOWN,
-        'left'=>FlxKey.LEFT,
-        'right'=>FlxKey.RIGHT,
-        'jump'=>FlxKey.Z,
-        'shoot'=>FlxKey.X
-    ];
 
     private var isOnGround:Bool;
     private var isLookingUp:Bool;
@@ -42,9 +30,6 @@ class Player extends FlxSprite
     private var jumpSfx:FlxSound;
     private var landSfx:FlxSound;
 
-    private var controls:Map<String, Int>;
-    private var controller:FlxGamepad;
-
     public function new(x:Int, y:Int)
     {
         super(x, y);
@@ -54,8 +39,6 @@ class Player extends FlxSprite
         height = 19;
         offset.x = 6;
         offset.y = 5;
-
-        controls = P1_CONTROLS;
 
         setFacingFlip(FlxObject.LEFT, false, false);
         setFacingFlip(FlxObject.RIGHT, true, false);
@@ -81,13 +64,12 @@ class Player extends FlxSprite
 
     override public function update(elapsed:Float)
     {
-        controller = FlxG.gamepads.getByID(0);
         if(justTouched(FlxObject.FLOOR)) {
             landSfx.play();
         }
         isOnGround = isTouching(FlxObject.DOWN);
-        isLookingUp = checkPressed('up');
-        isLookingDown = checkPressed('down');
+        isLookingUp = Controls.checkPressed('up');
+        isLookingDown = Controls.checkPressed('down');
         move();
         animate();
         sound();
@@ -103,7 +85,7 @@ class Player extends FlxSprite
 
     private function move()
     {
-        if(checkPressed('left')) {
+        if(Controls.checkPressed('left')) {
             if(isOnGround) {
                 acceleration.x = -GROUND_ACCEL;
             }
@@ -112,7 +94,7 @@ class Player extends FlxSprite
             }
             facing = FlxObject.LEFT;
         }
-        else if(checkPressed('right')) {
+        else if(Controls.checkPressed('right')) {
             if(isOnGround) {
                 acceleration.x = GROUND_ACCEL;
             }
@@ -132,11 +114,11 @@ class Player extends FlxSprite
             }
         }
 
-        if(checkJustPressed('jump') && isOnGround) {
+        if(Controls.checkJustPressed('jump') && isOnGround) {
             velocity.y = -JUMP_POWER;
             jumpSfx.play();
         }
-        else if(checkJustReleased('jump') && !isOnGround) {
+        else if(Controls.checkJustReleased('jump') && !isOnGround) {
             velocity.y = Math.max(velocity.y, -JUMP_CANCEL_POWER);
         }
 
@@ -184,63 +166,6 @@ class Player extends FlxSprite
         else {
             runSfx.stop();
         }
-    }
-
-    private function checkPressed(name:String) {
-        if(controller == null) {
-            return FlxG.keys.anyPressed([controls[name]]);
-        }
-        else {
-            if(name == 'shoot') {
-                return controller.pressed.X;
-            } 
-            if(name == 'jump') {
-                return controller.pressed.A;
-            } 
-            if(name == 'left') {
-                return controller.analog.value.LEFT_STICK_X < -DEAD_ZONE;
-            }
-            if(name == 'right') {
-                return controller.analog.value.LEFT_STICK_X > DEAD_ZONE;
-            }
-            if(name == 'up') {
-                return controller.analog.value.LEFT_STICK_Y < -DEAD_ZONE;
-            }
-            if(name == 'down') {
-                return controller.analog.value.LEFT_STICK_Y > DEAD_ZONE;
-            }
-        }
-        return false;
-    }
-
-    private function checkJustPressed(name:String) {
-        if(controller == null) {
-            return FlxG.keys.anyJustPressed([controls[name]]);
-        }
-        else {
-            if(name == 'shoot') {
-                return controller.justPressed.X;
-            } 
-            if(name == 'jump') {
-                return controller.justPressed.A;
-            } 
-        }
-        return false;
-    }
-
-    private function checkJustReleased(name:String) {
-        if(controller == null) {
-            return FlxG.keys.anyJustReleased([controls[name]]);
-        }
-        else {
-            if(name == 'shoot') {
-                return controller.justReleased.X;
-            } 
-            if(name == 'jump') {
-                return controller.justReleased.A;
-            } 
-        }
-        return false;
     }
 
 }
