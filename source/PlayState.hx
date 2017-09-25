@@ -7,6 +7,7 @@ class PlayState extends FlxState
 {
     private var map:FlxTilemap;
     private var player:Player;
+    private var option:Option;
 
     override public function create():Void
     {
@@ -19,9 +20,11 @@ class PlayState extends FlxState
         map.loadMapFromGraphic(mapPath, false, 1, tilesetPath, 16, 16, AUTO);
         add(map);
 
-        // Add player
+        // Add player & option
         player = new Player(50, 50);
+        option = new Option(player);
         add(player);
+        add(option);
     }
 
     override public function update(elapsed:Float):Void
