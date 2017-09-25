@@ -30,6 +30,9 @@ class Option extends FlxSprite
     {
         setDestination();
         move();
+        if(Controls.checkJustPressed('shoot')) {
+            shoot();
+        }
         super.update(elapsed);
     }
 
@@ -61,6 +64,18 @@ class Option extends FlxSprite
                 this, destination, FAR_ACCELERATION, MAX_SPEED
             );
         }
+    }
+
+    private function shoot()
+    {
+        var bulletVelocity = new FlxPoint(Bullet.SPEED, 0);
+        if (player.facing == FlxObject.LEFT) {
+            bulletVelocity.x = -Bullet.SPEED;
+        }
+        var bullet = new Bullet(
+            Std.int(x + width/2), Std.int(y + height/2), bulletVelocity
+        );
+        FlxG.state.add(bullet);
     }
 
 }
