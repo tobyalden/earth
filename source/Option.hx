@@ -13,8 +13,11 @@ class Option extends FlxSprite
     public static inline var FAR_ACCELERATION = 20000;
     public static inline var MAX_SPEED = 120000;
 
+    public static inline var SHOT_COOLDOWN = 0.25;
+
     private var player:Player;
     private var destination:FlxPoint;
+    private var shootTimer:FlxTimer;
 
     public function new(player:Player)
     {
@@ -24,13 +27,15 @@ class Option extends FlxSprite
         destination = new FlxPoint(
             player.x + HOVER_DISTANCE_X, player.y - HOVER_DISTANCE_Y
         );
+        shootTimer = new FlxTimer();
+        shootTimer.loops = 1;
     }
 
     override public function update(elapsed:Float)
     {
         setDestination();
         move();
-        if(Controls.checkJustPressed('shoot')) {
+        if(Controls.checkPressed('shoot')) {
             shoot();
         }
         super.update(elapsed);
@@ -68,14 +73,17 @@ class Option extends FlxSprite
 
     private function shoot()
     {
-        var bulletVelocity = new FlxPoint(Bullet.SPEED, 0);
-        if (player.facing == FlxObject.LEFT) {
-            bulletVelocity.x = -Bullet.SPEED;
+        if(!shootTimer.active) {
+            shootTimer.reset(SHOT_COOLDOWN);
+            var bulletVelocity = new FlxPoint(Bullet.SPEED, 0);
+            if (player.facing == FlxObject.LEFT) {
+                bulletVelocity.x = -Bullet.SPEED;
+            }
+            var bullet = new Bullet(
+                Std.int(x + width/2), Std.int(y + height/2), bulletVelocity
+            );
+            FlxG.state.add(bullet);
         }
-        var bullet = new Bullet(
-            Std.int(x + width/2), Std.int(y + height/2), bulletVelocity
-        );
-        FlxG.state.add(bullet);
     }
 
 }
