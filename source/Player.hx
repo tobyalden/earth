@@ -5,7 +5,6 @@ import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
 
-
 class Player extends FlxSprite
 {
     public static inline var SPEED = 150;

@@ -16,7 +16,8 @@ class Option extends FlxSprite
     private var player:Player;
     private var destination:FlxPoint;
 
-    public function new(player:Player) {
+    public function new(player:Player)
+    {
         super(player.x, player.y);
         loadGraphic('assets/images/option.png');
         this.player = player;
@@ -25,7 +26,15 @@ class Option extends FlxSprite
         );
     }
 
-    override public function update(elapsed:Float) {
+    override public function update(elapsed:Float)
+    {
+        setDestination();
+        move();
+        super.update(elapsed);
+    }
+
+    private function setDestination()
+    {
         if(player.facing == FlxObject.LEFT) {
             destination.x = player.x + player.width/2 + HOVER_DISTANCE_X;
         }
@@ -33,6 +42,10 @@ class Option extends FlxSprite
             destination.x = player.x + player.width/2 - HOVER_DISTANCE_Y;
         }
         destination.y = player.y - HOVER_DISTANCE_Y;
+    }
+
+    private function move()
+    {
         if(FlxMath.distanceToPoint(this, destination) < 3) {
             FlxVelocity.accelerateTowardsPoint(
                 this, destination, NEAR_ACCELERATION/4, MAX_SPEED
@@ -48,6 +61,6 @@ class Option extends FlxSprite
                 this, destination, FAR_ACCELERATION, MAX_SPEED
             );
         }
-        super.update(elapsed);
     }
+
 }
