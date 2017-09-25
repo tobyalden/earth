@@ -26,9 +26,19 @@ class Option extends FlxSprite
     }
 
     override public function update(elapsed:Float) {
-        destination.x = player.x + HOVER_DISTANCE_X;
+        if(player.facing == FlxObject.LEFT) {
+            destination.x = player.x + player.width/2 + HOVER_DISTANCE_X;
+        }
+        else {
+            destination.x = player.x + player.width/2 - HOVER_DISTANCE_Y;
+        }
         destination.y = player.y - HOVER_DISTANCE_Y;
-        if(FlxMath.distanceToPoint(this, destination) < 10) {
+        if(FlxMath.distanceToPoint(this, destination) < 3) {
+            FlxVelocity.accelerateTowardsPoint(
+                this, destination, NEAR_ACCELERATION/4, MAX_SPEED
+            );
+        }
+        else if(FlxMath.distanceToPoint(this, destination) < 10) {
             FlxVelocity.accelerateTowardsPoint(
                 this, destination, NEAR_ACCELERATION, MAX_SPEED
             );
