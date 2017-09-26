@@ -14,11 +14,12 @@ class Player extends FlxSprite
     public static inline var BULLET_KICKBACK_SIDE = 200;
     public static inline var JUMP_CANCEL_POWER = 100;
     public static inline var GRAVITY = 12;
+    public static inline var LIFT_ACCEL = 800;
     public static inline var AIR_ACCEL = 1500;
     public static inline var GROUND_ACCEL = 2000;
     public static inline var GROUND_DRAG = 2000;
     public static inline var TERMINAL_VELOCITY = 300;
-    public static inline var OPTION_LIFT = 8;
+    public static inline var OPTION_LIFT = 10;
     public static inline var MAX_LIFT_SPEED = 150;
     public static inline var SHOT_COOLDOWN = 0.5;
 
@@ -95,6 +96,9 @@ class Player extends FlxSprite
             if(isOnGround) {
                 acceleration.x = -GROUND_ACCEL;
             }
+            else if(hangingOnOption) {
+                acceleration.x = -LIFT_ACCEL;
+            }
             else {
                 acceleration.x = -AIR_ACCEL;
             }
@@ -104,18 +108,23 @@ class Player extends FlxSprite
             if(isOnGround) {
                 acceleration.x = GROUND_ACCEL;
             }
+            else if(hangingOnOption) {
+                acceleration.x = LIFT_ACCEL;
+            }
             else {
                 acceleration.x = AIR_ACCEL;
             }
             facing = FlxObject.RIGHT;
         }
         else {
+            acceleration.x = 0;
             if(isOnGround) {
-                acceleration.x = 0;
                 drag.x = GROUND_DRAG;
             }
+            else if(hangingOnOption) {
+                drag.x = LIFT_ACCEL;
+            }
             else {
-                acceleration.x = 0;
                 drag.x = AIR_ACCEL/2;
             }
         }

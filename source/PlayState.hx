@@ -26,6 +26,7 @@ class PlayState extends FlxState
                     segment.x = x * segment.width;
                     segment.y = y * segment.height;
                     sealSegment(x, y, segment);
+                    currentSegment = segment; // temp
                     add(segment);
                 }
             }
@@ -37,7 +38,9 @@ class PlayState extends FlxState
         );
 
         // Add player & option
-        player = new Player(50, 50);
+        player = new Player(
+            Std.int(currentSegment.x + 50), Std.int(currentSegment.y + 50)
+        );
         option = new Option(player);
         add(player);
         add(option);
