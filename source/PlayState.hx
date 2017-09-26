@@ -5,6 +5,7 @@ import flixel.*;
 class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
+    public static inline var MAX_SEGMENT_INDEX = 25;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -21,7 +22,8 @@ class PlayState extends FlxState
         for (x in 0...level.widthInTiles) {
             for (y in 0...level.heightInTiles) {
                     if(level.getTile(x, y) == 1) {
-                    var segmentPath = 'assets/data/segments/0.png';
+                    rand = FlxG.random.int(0, MAX_SEGMENT_INDEX);
+                    var segmentPath = 'assets/data/segments/' + rand + '.png';
                     var segment = new Segment(segmentPath);
                     segment.x = x * segment.width;
                     segment.y = y * segment.height;

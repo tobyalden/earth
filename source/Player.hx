@@ -8,6 +8,7 @@ import flixel.util.*;
 class Player extends FlxSprite
 {
     public static inline var SPEED = 150;
+    public static inline var OPTION_SPEED = 100;
     public static inline var JUMP_POWER = 330;
     public static inline var BULLET_SPREAD = 45;
     public static inline var BULLET_KICKBACK_UP = 260;
@@ -148,8 +149,12 @@ class Player extends FlxSprite
             }
         }
 
-        velocity.x = Math.min(velocity.x, SPEED);
-        velocity.x = Math.max(velocity.x, -SPEED);
+        var speed = SPEED;
+        if(hangingOnOption) {
+            speed = OPTION_SPEED;
+        }
+        velocity.x = Math.min(velocity.x, speed);
+        velocity.x = Math.max(velocity.x, -speed);
         if(hangingOnOption) {
             velocity.y = Math.max(
                 velocity.y - OPTION_LIFT, -MAX_LIFT_SPEED
