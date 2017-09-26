@@ -5,7 +5,7 @@ import flixel.tile.*;
 
 class PlayState extends FlxState
 {
-    private var map:FlxTilemap;
+    private var segment:LevelSegment;
     private var player:Player;
     private var option:Option;
 
@@ -16,9 +16,9 @@ class PlayState extends FlxState
         // Add map
         var mapPath = 'assets/data/maps/0.png';
         var tilesetPath = 'assets/images/tiles.png';
-        map = new FlxTilemap();
-        map.loadMapFromGraphic(mapPath, false, 1, tilesetPath, 16, 16, AUTO);
-        add(map);
+        segment = new LevelSegment();
+        segment.loadMapFromGraphic(mapPath, false, 1, tilesetPath, 16, 16, AUTO);
+        add(segment);
 
         // Add player & option
         player = new Player(50, 50);
@@ -29,7 +29,7 @@ class PlayState extends FlxState
 
     override public function update(elapsed:Float):Void
     {
-        FlxG.collide(player, map);
+        FlxG.collide(player, segment);
         Controls.controller = FlxG.gamepads.getByID(0);
         super.update(elapsed);
     }

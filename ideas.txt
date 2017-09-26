@@ -1,0 +1,7 @@
+BADGE IDEAS:
+- shoot at an angle (maybe instead of straight up and down can shoot slightly up and down)
+- lock direction when holding shot
+- shoot while being carried (should definitely have some recoil)
+- shotgun blast
+- light
+- 

@@ -96,7 +96,7 @@ class Option extends FlxSprite
 
     private function shoot()
     {
-        if(!shootTimer.active) {
+        if(!shootTimer.active && !player.isHangingOnOption()) {
             shootTimer.reset(SHOT_COOLDOWN);
             var bulletVelocity = new FlxPoint(Bullet.SPEED, 0);
             if (player.facing == FlxObject.LEFT) {
