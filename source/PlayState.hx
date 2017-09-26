@@ -79,6 +79,11 @@ class PlayState extends FlxState
             currentSegment = cast(segment, Segment);
             FlxObject.separate(player, segment);
         });
+        for (bullet in Bullet.all) {
+            if(currentSegment.overlaps(bullet)) {
+                bullet.destroy();
+            }
+        }
         FlxG.camera.follow(player, LOCKON, 3);
         FlxG.camera.setScrollBoundsRect(
             currentSegment.x, currentSegment.y,
