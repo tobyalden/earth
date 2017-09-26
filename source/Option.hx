@@ -6,11 +6,10 @@ import flixel.util.*;
 
 class Option extends FlxSprite
 {
-    public static inline var HOVER_DISTANCE_X = 20;
-    public static inline var HOVER_DISTANCE_Y = 20;
+    public static inline var HOVER_DISTANCE = 20;
+    public static inline var HANG_DISTANCE = 5;
 
-    public static inline var NEAR_ACCELERATION = 10000;
-    public static inline var FAR_ACCELERATION = 20000;
+    public static inline var ACCELERATION = 20000;
     public static inline var MAX_SPEED = 120000;
 
     public static inline var SHOT_COOLDOWN = 0.25;
@@ -25,7 +24,7 @@ class Option extends FlxSprite
         loadGraphic('assets/images/option.png');
         this.player = player;
         destination = new FlxPoint(
-            player.x + HOVER_DISTANCE_X, player.y - HOVER_DISTANCE_Y
+            player.x + HOVER_DISTANCE, player.y - HOVER_DISTANCE
         );
         shootTimer = new FlxTimer();
         shootTimer.loops = 1;
@@ -43,30 +42,54 @@ class Option extends FlxSprite
 
     private function setDestination()
     {
+        var hoverDistance = HOVER_DISTANCE;
+        if(player.isHangingOnOption()) {
+            hoverDistance = HANG_DISTANCE;
+        }
+        destination.x = player.x + player.width/2 - width/2;
         if(player.facing == FlxObject.LEFT) {
-            destination.x = player.x + player.width/2 + HOVER_DISTANCE_X;
+            destination.x += hoverDistance;
         }
         else {
-            destination.x = player.x + player.width/2 - HOVER_DISTANCE_Y;
+            destination.x -= hoverDistance;
         }
-        destination.y = player.y - HOVER_DISTANCE_Y;
+        destination.y = player.y - hoverDistance;
     }
 
     private function move()
     {
-        if(FlxMath.distanceToPoint(this, destination) < 3) {
+        if(
+            player.isHangingOnOption()
+            && FlxMath.distanceToPoint(this, destination) < 30
+        ) {
+            x = (x + destination.x * 2)/3;
+            y = (y + destination.y * 2)/3;
+            velocity.set(0, 0);
+            acceleration.set(0, 0);
+        }
+        else if(FlxMath.distanceToPoint(this, destination) < 3) {
             FlxVelocity.accelerateTowardsPoint(
-                this, destination, NEAR_ACCELERATION/4, MAX_SPEED
+                this, destination, ACCELERATION/8, MAX_SPEED
             );
         }
         else if(FlxMath.distanceToPoint(this, destination) < 10) {
             FlxVelocity.accelerateTowardsPoint(
-                this, destination, NEAR_ACCELERATION, MAX_SPEED
+                this, destination, ACCELERATION/2, MAX_SPEED
+            );
+        }
+        else if(player.isHangingOnOption() && FlxMath.distanceToPoint(this, destination) > 30) {
+            FlxVelocity.accelerateTowardsPoint(
+                this, destination, ACCELERATION*4, MAX_SPEED
+            );
+        }
+        else if(player.isHangingOnOption()) {
+            FlxVelocity.accelerateTowardsPoint(
+                this, destination, ACCELERATION*2, MAX_SPEED
             );
         }
         else {
             FlxVelocity.accelerateTowardsPoint(
-                this, destination, FAR_ACCELERATION, MAX_SPEED
+                this, destination, ACCELERATION, MAX_SPEED
             );
         }
     }

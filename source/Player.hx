@@ -18,11 +18,14 @@ class Player extends FlxSprite
     public static inline var GROUND_ACCEL = 2000;
     public static inline var GROUND_DRAG = 2000;
     public static inline var TERMINAL_VELOCITY = 300;
+    public static inline var OPTION_LIFT = 8;
+    public static inline var MAX_LIFT_SPEED = 150;
     public static inline var SHOT_COOLDOWN = 0.5;
 
     private var isOnGround:Bool;
     private var isLookingUp:Bool;
     private var isLookingDown:Bool;
+    private var hangingOnOption:Bool;
 
     private var runSfx:FlxSound;
     private var deathSfx:FlxSound;
@@ -53,6 +56,7 @@ class Player extends FlxSprite
         isOnGround = false;
         isLookingUp = false;
         isLookingDown = false;
+        hangingOnOption = false;
 
         runSfx = FlxG.sound.load('assets/sounds/runloop.wav');
         deathSfx = FlxG.sound.load('assets/sounds/death.wav');
@@ -84,6 +88,9 @@ class Player extends FlxSprite
 
     private function move()
     {
+        if(isOnGround) {
+            hangingOnOption = false;
+        }
         if(Controls.checkPressed('left')) {
             if(isOnGround) {
                 acceleration.x = -GROUND_ACCEL;
@@ -113,17 +120,35 @@ class Player extends FlxSprite
             }
         }
 
-        if(Controls.checkJustPressed('jump') && isOnGround) {
-            velocity.y = -JUMP_POWER;
-            jumpSfx.play();
+        if(Controls.checkJustPressed('jump')) {
+            if(isOnGround) {
+                velocity.y = -JUMP_POWER;
+                jumpSfx.play();
+            }
+            else {
+                hangingOnOption = true;
+            }
         }
-        else if(Controls.checkJustReleased('jump') && !isOnGround) {
-            velocity.y = Math.max(velocity.y, -JUMP_CANCEL_POWER);
+
+        if(Controls.checkJustReleased('jump') && !isOnGround) {
+            if(hangingOnOption) {
+                hangingOnOption = false;
+            }
+            else {
+                velocity.y = Math.max(velocity.y, -JUMP_CANCEL_POWER);
+            }
         }
 
         velocity.x = Math.min(velocity.x, SPEED);
         velocity.x = Math.max(velocity.x, -SPEED);
-        velocity.y = Math.min(velocity.y + GRAVITY, TERMINAL_VELOCITY);
+        if(hangingOnOption) {
+            velocity.y = Math.max(
+                velocity.y - OPTION_LIFT, -MAX_LIFT_SPEED
+            );
+        }
+        else {
+            velocity.y = Math.min(velocity.y + GRAVITY, TERMINAL_VELOCITY);
+        }
     }
 
     private function animate()
@@ -165,6 +190,10 @@ class Player extends FlxSprite
         else {
             runSfx.stop();
         }
+    }
+
+    public function isHangingOnOption() {
+        return hangingOnOption;
     }
 
 }
