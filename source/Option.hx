@@ -53,7 +53,12 @@ class Option extends FlxSprite
         else {
             destination.x -= hoverDistance;
         }
-        destination.y = player.y - hoverDistance;
+        if(Controls.checkPressed('shoot') && !player.isHangingOnOption()) {
+            destination.y = player.y + player.height/2 - height/2;
+        }
+        else {
+            destination.y = player.y - hoverDistance;
+        }
     }
 
     private function move()
@@ -101,6 +106,12 @@ class Option extends FlxSprite
             var bulletVelocity = new FlxPoint(Bullet.SPEED, 0);
             if (player.facing == FlxObject.LEFT) {
                 bulletVelocity.x = -Bullet.SPEED;
+            }
+            if(Controls.checkPressed('down')) {
+                bulletVelocity.y = Bullet.SPEED;
+            }
+            if(Controls.checkPressed('up')) {
+                bulletVelocity.y = -Bullet.SPEED;
             }
             var bullet = new Bullet(
                 Std.int(x + width/2), Std.int(y + height/2), bulletVelocity
