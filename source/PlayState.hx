@@ -22,6 +22,7 @@ class PlayState extends FlxState
                     var segment = new Segment(segmentPath);
                     segment.x = x * segment.width;
                     segment.y = y * segment.height;
+                    sealSegment(x, y, segment);
                     add(segment);
                 }
             }
@@ -37,6 +38,29 @@ class PlayState extends FlxState
         option = new Option(player);
         add(player);
         add(option);
+    }
+
+    private function sealSegment(x:Int, y:Int, segment:Segment) {
+        if(!level.hasSegment(x - 1, y)) {
+            for (y in 0...segment.heightInTiles) {
+                segment.setTile(0, y, 1);
+            }
+        }
+        if(!level.hasSegment(x + 1, y)) {
+            for (y in 0...segment.heightInTiles) {
+                segment.setTile(segment.widthInTiles - 1, y, 1);
+            }
+        }
+        if(!level.hasSegment(x, y - 1)) {
+            for (x in 0...segment.widthInTiles) {
+                segment.setTile(x, 0, 1);
+            }
+        }
+        if(!level.hasSegment(x, y + 1)) {
+            for (x in 0...segment.widthInTiles) {
+                segment.setTile(x, segment.heightInTiles - 1, 1);
+            }
+        }
     }
 
     override public function update(elapsed:Float):Void

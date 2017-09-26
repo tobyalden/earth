@@ -16,4 +16,5 @@ class Segment extends FlxTilemap
             path, false, 1, 'assets/images/tiles.png', 16, 16, AUTO
         );
     }
+
 }
