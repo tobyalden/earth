@@ -43,6 +43,7 @@ class Option extends FlxSprite
     private function setDestination()
     {
         var hoverDistance = HOVER_DISTANCE;
+        solid = !player.isHangingOnOption();
         if(player.isHangingOnOption()) {
             hoverDistance = HANG_DISTANCE;
         }

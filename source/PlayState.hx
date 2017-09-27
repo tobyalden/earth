@@ -79,6 +79,7 @@ class PlayState extends FlxState
             currentSegment = cast(segment, Segment);
             FlxObject.separate(player, segment);
         });
+        FlxG.collide(option, Segment.all);
         for (bullet in Bullet.all) {
             if(currentSegment.overlaps(bullet)) {
                 bullet.destroy();
