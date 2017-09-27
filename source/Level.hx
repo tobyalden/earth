@@ -16,8 +16,16 @@ class Level extends FlxTilemap
         loadMapFromGraphic(path, false, 1, 'assets/images/tiles.png');
     }
 
-    public function hasSegment(tileX:Int, tileY:Int) {
+    public function inLevel(tileX:Int, tileY:Int) {
         return getTile(tileX, tileY) > 0;
+    }
+
+    public function getSegment(segmentX:Int, segmentY:Int) {
+        return segments.get([segmentX, segmentY].toString());
+    }
+
+    public function setSegment(segmentX:Int, segmentY:Int, segment:Segment) {
+        segments.set([segmentX, segmentY].toString(), segment);
     }
 
     override function getTile(tileX:Int, tileY:Int) {
@@ -33,36 +41,36 @@ class Level extends FlxTilemap
     public function generate() {
         for (x in 0...widthInTiles) {
             for (y in 0...heightInTiles) {
-                if(hasSegment(x, y)) {
+                if(inLevel(x, y)) {
                     var rand = FlxG.random.int(0, MAX_SEGMENT_INDEX);
                     var segmentPath = 'assets/data/segments/' + rand + '.png';
                     var segment = new Segment(segmentPath);
                     segment.x = x * segment.width;
                     segment.y = y * segment.height;
                     sealSegment(x, y, segment);
-                    segments.set([x, y].toString(), segment);
+                    setSegment(x, y, segment);
                 }
             }
         }
     }
 
     private function sealSegment(x:Int, y:Int, segment:Segment) {
-        if(!hasSegment(x - 1, y)) {
+        if(!inLevel(x - 1, y)) {
             for (y in 0...segment.heightInTiles) {
                 segment.setTile(0, y, 1);
             }
         }
-        if(!hasSegment(x + 1, y)) {
+        if(!inLevel(x + 1, y)) {
             for (y in 0...segment.heightInTiles) {
                 segment.setTile(segment.widthInTiles - 1, y, 1);
             }
         }
-        if(!hasSegment(x, y - 1)) {
+        if(!inLevel(x, y - 1)) {
             for (x in 0...segment.widthInTiles) {
                 segment.setTile(x, 0, 1);
             }
         }
-        if(!hasSegment(x, y + 1)) {
+        if(!inLevel(x, y + 1)) {
             for (x in 0...segment.widthInTiles) {
                 segment.setTile(x, segment.heightInTiles - 1, 1);
             }
