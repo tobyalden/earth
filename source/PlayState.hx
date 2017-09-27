@@ -4,7 +4,7 @@ import flixel.*;
 
 class PlayState extends FlxState
 {
-    public static inline var MAX_LEVEL_INDEX = 10;
+    public static inline var MAX_LEVEL_INDEX = 11;
 
     private var level:Level;
     private var currentSegment:Segment;

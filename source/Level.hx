@@ -11,7 +11,8 @@ class Level extends FlxTilemap
 
     public static var MAX_SEGMENT_INDEXES = [
         '1x1' => 10,
-        '2x2' => 0
+        '2x2' => 0,
+        '3x3' => 0
     ];
 
     public var segments:Map<String, Segment>;
@@ -37,6 +38,19 @@ class Level extends FlxTilemap
 
     public function setSegment(segmentX:Int, segmentY:Int, segment:Segment) {
         segments.set([segmentX, segmentY].toString(), segment);
+    }
+
+    public function setSegments(
+        segmentX:Int, segmentY:Int, segmentWidth:Int, segmentHeight:Int,
+        segment:Segment
+    ) {
+        for(widthIndex in 0...segmentWidth) {
+            for(heightIndex in 0...segmentHeight) {
+                setSegment(
+                    segmentX + widthIndex, segmentY + heightIndex, segment
+                );
+            }
+        }
     }
 
     public function canPlace1x1Segment(segmentX:Int, segmentY:Int) {
@@ -69,7 +83,7 @@ class Level extends FlxTilemap
     }
 
     public function generate() {
-        makeRoom(2, 2);
+        makeRoom(3, 3);
         // Fill remaining spaces with 1x1 segments
         for (x in 0...widthInTiles) {
             for (y in 0...heightInTiles) {
@@ -113,18 +127,18 @@ class Level extends FlxTilemap
         for(x in 0...widthInTiles) {
             for(y in 0...heightInTiles) {
                 if(canPlaceSegment(x, y, sizeX, sizeY)) {
-                    var rand = FlxG.random.int(0, MAX_SEGMENT_INDEXES['2x2']);
+                    var sizeKey = sizeX + 'x' + sizeY;
+                    var rand = FlxG.random.int(
+                        0, MAX_SEGMENT_INDEXES[sizeKey]
+                    );
                     var segmentPath = (
-                        'assets/data/segments/2x2/' + rand + '.png'
+                        'assets/data/segments/' + sizeKey + '/' + rand + '.png'
                     );
                     var segment = new Segment(segmentPath);
                     segment.x = x * MIN_SEGMENT_WIDTH;
                     segment.y = y * MIN_SEGMENT_HEIGHT;
                     //sealSegment(x, y, segment);
-                    setSegment(x, y, segment);
-                    setSegment(x + 1, y, segment);
-                    setSegment(x, y + 1, segment);
-                    setSegment(x + 1, y + 1, segment);
+                    setSegments(x, y, sizeX, sizeY, segment);
                     return;
                 }
             }
