@@ -54,7 +54,16 @@ class Option extends FlxSprite
             destination.x -= hoverDistance;
         }
         if(Controls.checkPressed('shoot') && !player.isHangingOnOption()) {
-            destination.y = player.y + player.height/2 - height/2;
+            if(Controls.checkPressed('down')) {
+                destination.y = player.y - hoverDistance * 2;
+            }
+            else if(Controls.checkPressed('up')) {
+                destination.y = player.y - hoverDistance;
+                destination.x = player.x + player.width/2 - width/2;
+            }
+            else {
+                destination.y = player.y + player.height/2 - height/2;
+            }
         }
         else {
             destination.y = player.y - hoverDistance;
