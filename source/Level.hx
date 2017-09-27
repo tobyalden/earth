@@ -36,6 +36,25 @@ class Level extends FlxTilemap
         segments.set([segmentX, segmentY].toString(), segment);
     }
 
+    public function canPlace1x1Segment(segmentX:Int, segmentY:Int) {
+        return inLevel(segmentX, segmentY) && !hasSegment(segmentX, segmentY);
+    }
+
+    public function canPlaceSegment(
+        segmentX:Int, segmentY:Int, segmentWidth:Int, segmentHeight:Int
+    ) {
+        for(widthIndex in 0...segmentWidth) {
+            for(heightIndex in 0...segmentHeight) {
+                if(!canPlace1x1Segment(
+                        segmentX + widthIndex, segmentY + heightIndex
+                )) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     override function getTile(tileX:Int, tileY:Int) {
         if (
             tileX < 0 || tileX >= widthInTiles
@@ -51,7 +70,7 @@ class Level extends FlxTilemap
         // Fill remaining spaces with 1x1 segments
         for (x in 0...widthInTiles) {
             for (y in 0...heightInTiles) {
-                if(inLevel(x, y) && !hasSegment(x, y)) {
+                if(canPlace1x1Segment(x, y)) {
                     var rand = FlxG.random.int(0, MAX_SEGMENT_INDEX);
                     var segmentPath = 'assets/data/segments/' + rand + '.png';
                     var segment = new Segment(segmentPath);
@@ -88,16 +107,11 @@ class Level extends FlxTilemap
     }
 
     // TODO: Refactor into method (makeRoom)
+    //public function makeRoom(sizeX:Int, sizeY:Int) {
     public function add2x2() {
         for(x in 0...widthInTiles) {
             for(y in 0...heightInTiles) {
-                if(
-                    // TODO: Refactor into method
-                    inLevel(x, y) && inLevel(x + 1, y)
-                    && inLevel(x, y + 1) && inLevel(x + 1, y + 1)
-                    && !hasSegment(x, y) && !hasSegment(x + 1, y)
-                    && !hasSegment(x, y + 1) && !hasSegment(x + 1, y + 1)
-                ) {
+                if(canPlaceSegment(x, y, 2, 2)) {
                     var rand = FlxG.random.int(0, MAX_2X2_SEGMENT_INDEX);
                     var segmentPath = (
                         'assets/data/segments/2x2/' + rand + '.png'
