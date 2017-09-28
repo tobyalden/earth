@@ -6,8 +6,14 @@ import flixel.tile.*;
 class Level extends FlxTilemap
 {
     public static inline var TILE_SIZE = 16;
-    public static inline var MIN_SEGMENT_WIDTH = 20 * TILE_SIZE;
-    public static inline var MIN_SEGMENT_HEIGHT = 15 * TILE_SIZE;
+    public static inline var MIN_SEGMENT_WIDTH_IN_TILES = 20;
+    public static inline var MIN_SEGMENT_HEIGHT_IN_TILES = 15;
+    public static inline var MIN_SEGMENT_WIDTH = (
+        MIN_SEGMENT_WIDTH_IN_TILES * TILE_SIZE
+    );
+    public static inline var MIN_SEGMENT_HEIGHT = (
+        MIN_SEGMENT_HEIGHT_IN_TILES * TILE_SIZE
+    );
 
     public static var MAX_SEGMENT_INDEXES = [
         '1x1' => 10,
@@ -24,8 +30,82 @@ class Level extends FlxTilemap
         loadMapFromGraphic(path, false, 1, 'assets/images/tiles.png');
     }
 
-    public function inLevel(tileX:Int, tileY:Int) {
-        return getTile(tileX, tileY) > 0;
+    public function generate() {
+        // Add large segments
+        makeSegment(2, 2);
+        // Fill remaining spaces with 1x1 segments
+        for (tileX in 0...widthInTiles) {
+            for (tileY in 0...heightInTiles) {
+                if(canPlace1x1Segment(tileX, tileY)) {
+                    var rand = FlxG.random.int(
+                        0, MAX_SEGMENT_INDEXES['1x1']
+                    );
+                    var segmentPath = 'assets/data/segments/' + rand + '.png';
+                    var segment = new Segment(segmentPath);
+                    segment.x = tileX * MIN_SEGMENT_WIDTH;
+                    segment.y = tileY * MIN_SEGMENT_HEIGHT;
+                    setSegment(tileX, tileY, segment);
+                    sealSegment(tileX, tileY, segment);
+                }
+            }
+        }
+    }
+
+    private function sealSegment(segmentX:Int, segmentY:Int, segment:Segment) {
+        if(!inLevel(segmentX - 1, segmentY)) {
+            for (tileY in 0...MIN_SEGMENT_HEIGHT_IN_TILES) {
+                segment.setTile(0, tileY, 1);
+            }
+        }
+        if(!inLevel(segmentX + 1, segmentY)) {
+            for (tileY in 0...MIN_SEGMENT_HEIGHT_IN_TILES) {
+                segment.setTile(MIN_SEGMENT_WIDTH_IN_TILES - 1, tileY, 1);
+            }
+        }
+        if(!inLevel(segmentX, segmentY - 1)) {
+            for (tileX in 0...MIN_SEGMENT_WIDTH_IN_TILES) {
+                segment.setTile(tileX, 0, 1);
+            }
+        }
+        if(!inLevel(segmentX, segmentY + 1)) {
+            for (tileX in 0...MIN_SEGMENT_WIDTH_IN_TILES) {
+                segment.setTile(tileX, MIN_SEGMENT_HEIGHT_IN_TILES - 1, 1);
+            }
+        }
+    }
+
+    public function makeSegment(segmentWidth:Int, segmentHeight:Int) {
+        for(segmentX in 0...widthInTiles) {
+            for(segmentY in 0...heightInTiles) {
+                if(canPlaceSegment(
+                    segmentX, segmentY, segmentWidth, segmentHeight
+                )) {
+                    var segmentKey = segmentWidth + 'x' + segmentHeight;
+                    var rand = FlxG.random.int(
+                        0, MAX_SEGMENT_INDEXES[segmentKey]
+                    );
+                    var segmentPath = (
+                        'assets/data/segments/' + segmentKey + '/' + rand + '.png'
+                    );
+                    var segment = new Segment(segmentPath);
+                    segment.x = segmentX * MIN_SEGMENT_WIDTH;
+                    segment.y = segmentY * MIN_SEGMENT_HEIGHT;
+                    setSegments(
+                        segmentX, segmentY, segmentWidth, segmentHeight,
+                        segment
+                    );
+                    //sealSegments(
+                        //segmentX, segmentY, segmentWidth, segmentHeight,
+                        //segment
+                    //);
+                    return;
+                }
+            }
+        }
+    }
+
+    public function inLevel(segmentX:Int, segmentY:Int) {
+        return getTile(segmentX, segmentY) > 0;
     }
 
     public function getSegment(segmentX:Int, segmentY:Int) {
@@ -44,11 +124,9 @@ class Level extends FlxTilemap
         segmentX:Int, segmentY:Int, segmentWidth:Int, segmentHeight:Int,
         segment:Segment
     ) {
-        for(widthIndex in 0...segmentWidth) {
-            for(heightIndex in 0...segmentHeight) {
-                setSegment(
-                    segmentX + widthIndex, segmentY + heightIndex, segment
-                );
+        for(widthX in 0...segmentWidth) {
+            for(heightY in 0...segmentHeight) {
+                setSegment(segmentX + widthX, segmentY + heightY, segment);
             }
         }
     }
@@ -60,11 +138,11 @@ class Level extends FlxTilemap
     public function canPlaceSegment(
         segmentX:Int, segmentY:Int, segmentWidth:Int, segmentHeight:Int
     ) {
-        for(widthIndex in 0...segmentWidth) {
-            for(heightIndex in 0...segmentHeight) {
-                if(!canPlace1x1Segment(
-                    segmentX + widthIndex, segmentY + heightIndex
-                )) {
+        for(widthX in 0...segmentWidth) {
+            for(heightY in 0...segmentHeight) {
+                if(
+                    !canPlace1x1Segment(segmentX + widthX, segmentY + heightY)
+                ) {
                     return false;
                 }
             }
@@ -80,69 +158,6 @@ class Level extends FlxTilemap
             return -1;
         }
         return super.getTile(tileX, tileY);
-    }
-
-    public function generate() {
-        makeRoom(3, 3);
-        // Fill remaining spaces with 1x1 segments
-        for (x in 0...widthInTiles) {
-            for (y in 0...heightInTiles) {
-                if(canPlace1x1Segment(x, y)) {
-                    var rand = FlxG.random.int(0, MAX_SEGMENT_INDEXES['1x1']);
-                    var segmentPath = 'assets/data/segments/' + rand + '.png';
-                    var segment = new Segment(segmentPath);
-                    segment.x = x * MIN_SEGMENT_WIDTH;
-                    segment.y = y * MIN_SEGMENT_HEIGHT;
-                    sealSegment(x, y, segment);
-                    setSegment(x, y, segment);
-                }
-            }
-        }
-    }
-
-    private function sealSegment(x:Int, y:Int, segment:Segment) {
-        if(!inLevel(x - 1, y)) {
-            for (y in 0...segment.heightInTiles) {
-                segment.setTile(0, y, 1);
-            }
-        }
-        if(!inLevel(x + 1, y)) {
-            for (y in 0...segment.heightInTiles) {
-                segment.setTile(segment.widthInTiles - 1, y, 1);
-            }
-        }
-        if(!inLevel(x, y - 1)) {
-            for (x in 0...segment.widthInTiles) {
-                segment.setTile(x, 0, 1);
-            }
-        }
-        if(!inLevel(x, y + 1)) {
-            for (x in 0...segment.widthInTiles) {
-                segment.setTile(x, segment.heightInTiles - 1, 1);
-            }
-        }
-    }
-
-    public function makeRoom(sizeX:Int, sizeY:Int) {
-        for(x in 0...widthInTiles) {
-            for(y in 0...heightInTiles) {
-                if(canPlaceSegment(x, y, sizeX, sizeY)) {
-                    var sizeKey = sizeX + 'x' + sizeY;
-                    var rand = FlxG.random.int(
-                        0, MAX_SEGMENT_INDEXES[sizeKey]
-                    );
-                    var segmentPath = (
-                        'assets/data/segments/' + sizeKey + '/' + rand + '.png'
-                    );
-                    var segment = new Segment(segmentPath);
-                    segment.x = x * MIN_SEGMENT_WIDTH;
-                    segment.y = y * MIN_SEGMENT_HEIGHT;
-                    //sealSegment(x, y, segment);
-                    setSegments(x, y, sizeX, sizeY, segment);
-                    return;
-                }
-            }
-        }
     }
 
 }
