@@ -45,31 +45,55 @@ class Level extends FlxTilemap
                     segment.x = tileX * MIN_SEGMENT_WIDTH;
                     segment.y = tileY * MIN_SEGMENT_HEIGHT;
                     setSegment(tileX, tileY, segment);
-                    sealSegment(tileX, tileY, segment);
+                    sealSegment(tileX, tileY, 0, 0, segment);
                 }
             }
         }
     }
 
-    private function sealSegment(segmentX:Int, segmentY:Int, segment:Segment) {
+    private function sealSegments(
+        segmentX:Int, segmentY:Int, segmentWidth:Int, segmentHeight:Int,
+        segment:Segment
+    ) {
+        for(widthX in 0...segmentWidth) {
+            for(heightY in 0...segmentHeight) {
+                sealSegment(
+                    segmentX + widthX, segmentY + heightY, widthX, heightY,
+                    segment
+                );
+            }
+        }
+    }
+
+    private function sealSegment(
+        segmentX:Int, segmentY:Int, offsetX:Int, offsetY:Int, segment:Segment
+    ) {
+        var tileOffsetX = offsetX * MIN_SEGMENT_WIDTH_IN_TILES;
+        var tileOffsetY = offsetY * MIN_SEGMENT_HEIGHT_IN_TILES;
+        var tileLimitX = tileOffsetX + MIN_SEGMENT_WIDTH_IN_TILES;
+        var tileLimitY = tileOffsetY + MIN_SEGMENT_HEIGHT_IN_TILES;
         if(!inLevel(segmentX - 1, segmentY)) {
-            for (tileY in 0...MIN_SEGMENT_HEIGHT_IN_TILES) {
+            for (tileY in tileOffsetY...tileLimitY) {
                 segment.setTile(0, tileY, 1);
             }
         }
         if(!inLevel(segmentX + 1, segmentY)) {
-            for (tileY in 0...MIN_SEGMENT_HEIGHT_IN_TILES) {
-                segment.setTile(MIN_SEGMENT_WIDTH_IN_TILES - 1, tileY, 1);
+            for (tileY in tileOffsetY...tileLimitY) {
+                segment.setTile(
+                    tileOffsetX + MIN_SEGMENT_WIDTH_IN_TILES - 1, tileY, 1
+                );
             }
         }
         if(!inLevel(segmentX, segmentY - 1)) {
-            for (tileX in 0...MIN_SEGMENT_WIDTH_IN_TILES) {
+            for (tileX in tileOffsetX...tileLimitX) {
                 segment.setTile(tileX, 0, 1);
             }
         }
         if(!inLevel(segmentX, segmentY + 1)) {
-            for (tileX in 0...MIN_SEGMENT_WIDTH_IN_TILES) {
-                segment.setTile(tileX, MIN_SEGMENT_HEIGHT_IN_TILES - 1, 1);
+            for (tileX in tileOffsetX...tileLimitX) {
+                segment.setTile(
+                    tileX, tileOffsetY + MIN_SEGMENT_HEIGHT_IN_TILES - 1, 1
+                );
             }
         }
     }
@@ -94,10 +118,10 @@ class Level extends FlxTilemap
                         segmentX, segmentY, segmentWidth, segmentHeight,
                         segment
                     );
-                    //sealSegments(
-                        //segmentX, segmentY, segmentWidth, segmentHeight,
-                        //segment
-                    //);
+                    sealSegments(
+                        segmentX, segmentY, segmentWidth, segmentHeight,
+                        segment
+                    );
                     return;
                 }
             }
