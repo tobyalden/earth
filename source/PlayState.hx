@@ -48,6 +48,8 @@ class PlayState extends FlxState
     override public function update(elapsed:Float):Void
     {
         Controls.controller = FlxG.gamepads.getByID(0);
+
+        // Collisions
         FlxG.overlap(
             player, Segment.all, function(player:FlxObject, segment:FlxObject) {
             currentSegment = cast(segment, Segment);
@@ -55,10 +57,17 @@ class PlayState extends FlxState
         });
         FlxG.collide(option, Segment.all);
         for (bullet in Bullet.all) {
+            // Destroy bullets that collide with the current segment's tilemap
             if(currentSegment.overlaps(bullet)) {
                 bullet.destroy();
             }
+            // Destroy bullets outside the current segment
+            if(!FlxG.overlap(bullet, currentSegment)) {
+                cast(bullet, Bullet).destroyQuietly();
+            }
         }
+
+        // Camera
         FlxG.camera.follow(player, LOCKON, 3);
         FlxG.camera.setScrollBoundsRect(
             currentSegment.x, currentSegment.y,

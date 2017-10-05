@@ -38,4 +38,10 @@ class Bullet extends FlxSprite
         all.remove(this);
         super.destroy();
     }
+
+    public function destroyQuietly()
+    {
+        all.remove(this);
+        super.destroy();
+    }
 }
