@@ -37,6 +37,12 @@ class PlayState extends FlxState
         option = new Option(player);
         add(player);
         add(option);
+
+        var parasite = new Parasite(
+            Std.int(currentSegment.x + 75), Std.int(currentSegment.y + 75),
+            player
+        );
+        add(parasite);
     }
 
     override public function update(elapsed:Float):Void
