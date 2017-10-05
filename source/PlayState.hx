@@ -51,10 +51,12 @@ class PlayState extends FlxState
 
         // Collisions
         FlxG.overlap(
-            player, Segment.all, function(player:FlxObject, segment:FlxObject) {
-            currentSegment = cast(segment, Segment);
-            FlxObject.separate(player, segment);
-        });
+            player, Segment.all,
+            function(player:FlxObject, segment:FlxObject) {
+                currentSegment = cast(segment, Segment);
+                FlxObject.separate(player, segment);
+            }
+        );
         FlxG.collide(option, Segment.all);
         for (bullet in Bullet.all) {
             // Destroy bullets that collide with the current segment's tilemap
@@ -66,6 +68,13 @@ class PlayState extends FlxState
                 cast(bullet, Bullet).destroyQuietly();
             }
         }
+
+        FlxG.overlap(
+            Bullet.all, Enemy.all,
+            function(bullet:FlxObject, enemy:FlxObject) {
+                cast(enemy, Enemy).takeHit();
+            }
+        );
 
         // Camera
         FlxG.camera.follow(player, LOCKON, 3);

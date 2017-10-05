@@ -17,17 +17,25 @@ class Enemy extends FlxSprite
         all.add(this);
     }
 
+    public function movement() {
+        // Overridden in child classes
+    }
+
     override public function update(elapsed:Float)
     {
         movement();
         super.update(elapsed);
     }
 
-    public function movement() { }
-
     override public function kill() {
         FlxG.state.add(new Explosion(this));
         super.kill();
     }
 
+    public function takeHit() {
+        health -= 1;
+        if(health <= 0) {
+            kill();
+        }
+    }
 }
