@@ -24,11 +24,13 @@ class Level extends FlxTilemap
     ];
 
     public var segments:Map<String, Segment>;
+    public var specialSegments:Map<String, Segment>;
 
     public function new(path:String)
     {
         super();
         segments = new Map<String, Segment>();
+        specialSegments = new Map<String, Segment>();
         loadMapFromGraphic(path, false, 1, 'assets/images/tiles.png');
     }
 
@@ -98,7 +100,8 @@ class Level extends FlxTilemap
     }
 
     public function makeEntrance() {
-        makeSegment(1, 1, 'default');
+        var entrance = makeSegment(1, 1, 'default');
+        specialSegments.set('entrance', entrance);
     }
 
     public function makeSegment(
@@ -135,10 +138,11 @@ class Level extends FlxTilemap
                         segmentX, segmentY, segmentWidth, segmentHeight,
                         segment
                     );
-                    return;
+                    return segment;
                 }
             }
         }
+        return null;
     }
 
     public function inLevel(segmentX:Int, segmentY:Int) {
