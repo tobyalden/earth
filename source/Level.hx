@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.math.*;
 import flixel.tile.*;
 
 class Level extends FlxTilemap
@@ -103,8 +104,13 @@ class Level extends FlxTilemap
     public function makeSegment(
         segmentWidth:Int, segmentHeight:Int, ?segmentName:String=null
     ) {
-        for(segmentX in 0...widthInTiles) {
-            for(segmentY in 0...heightInTiles) {
+        var shuffledWidth = [for (i in 0...widthInTiles) i];
+        var shuffledHeight = [for (i in 0...heightInTiles) i];
+        var shuffler = new FlxRandom();
+        shuffler.shuffle(shuffledWidth);
+        shuffler.shuffle(shuffledHeight);
+        for(segmentX in shuffledWidth) {
+            for(segmentY in shuffledHeight) {
                 if(canPlaceSegment(
                     segmentX, segmentY, segmentWidth, segmentHeight
                 )) {
