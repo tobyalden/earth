@@ -77,6 +77,13 @@ class PlayState extends FlxState
             }
         );
 
+        FlxG.overlap(
+            player, Enemy.all,
+            function(player:FlxObject, enemy:FlxObject) {
+                cast(player, Player).takeHit();
+            }
+        );
+
         // Camera
         FlxG.camera.follow(player, LOCKON, 3);
         FlxG.camera.setScrollBoundsRect(

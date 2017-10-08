@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.effects.*;
 import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
@@ -34,6 +35,8 @@ class Player extends FlxSprite
     private var jumpSfx:FlxSound;
     private var landSfx:FlxSound;
 
+    private var lastCheckpoint:FlxPoint;
+
     public function new(x:Int, y:Int)
     {
         super(x, y);
@@ -65,6 +68,8 @@ class Player extends FlxSprite
         jumpSfx = FlxG.sound.load('assets/sounds/jump.wav');
         landSfx = FlxG.sound.load('assets/sounds/land.wav');
         runSfx.looped = true;
+
+        lastCheckpoint = new FlxPoint(x, y);
     }
 
     override public function update(elapsed:Float)
@@ -210,4 +215,19 @@ class Player extends FlxSprite
         return hangingOnOption;
     }
 
+    public function takeHit() {
+        die();
+    }
+
+    private function die() {
+        FlxG.state.add(new Explosion(this));
+        kill();
+        new FlxTimer().start(2, respawn);
+    }
+
+    private function respawn(_:FlxTimer) {
+        x = lastCheckpoint.x;
+        y = lastCheckpoint.y;
+        revive();
+    }
 }
