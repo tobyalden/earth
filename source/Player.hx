@@ -15,6 +15,7 @@ class Player extends FlxSprite
     public static inline var BULLET_KICKBACK_UP = 260;
     public static inline var BULLET_KICKBACK_SIDE = 200;
     public static inline var JUMP_CANCEL_POWER = 100;
+    public static inline var JUMP_GRACE_PERIOD = 0.1;
     public static inline var GRAVITY = 12;
     public static inline var LIFT_ACCEL = 800;
     public static inline var AIR_ACCEL = 1500;
@@ -26,6 +27,7 @@ class Player extends FlxSprite
     public static inline var SHOT_COOLDOWN = 0.5;
 
     private var isOnGround:Bool;
+    private var wasOnGround:FlxTimer;
     private var isLookingUp:Bool;
     private var isLookingDown:Bool;
     private var hangingOnOption:Bool;
@@ -59,6 +61,7 @@ class Player extends FlxSprite
         animation.play('idle');
 
         isOnGround = false;
+        wasOnGround = new FlxTimer();
         isLookingUp = false;
         isLookingDown = false;
         hangingOnOption = false;
@@ -76,6 +79,9 @@ class Player extends FlxSprite
     {
         if(justTouched(FlxObject.FLOOR)) {
             landSfx.play();
+        }
+        if(!isTouching(FlxObject.DOWN) && isOnGround) {
+            wasOnGround.start(JUMP_GRACE_PERIOD);
         }
         isOnGround = isTouching(FlxObject.DOWN);
         isLookingUp = Controls.checkPressed('up');
@@ -136,9 +142,11 @@ class Player extends FlxSprite
         }
 
         if(Controls.checkJustPressed('jump')) {
-            if(isOnGround) {
+            if(isOnGround || wasOnGround.active) {
                 velocity.y = -JUMP_POWER;
                 jumpSfx.play();
+                isOnGround = false;
+                wasOnGround.cancel();
             }
             else {
                 hangingOnOption = true;
