@@ -97,6 +97,7 @@ class Level extends FlxTilemap
     }
 
     public function makeEntrance() {
+        makeSegment(1, 1, 'default');
     }
 
     public function makeSegment(
@@ -108,16 +109,15 @@ class Level extends FlxTilemap
                     segmentX, segmentY, segmentWidth, segmentHeight
                 )) {
                     var segmentKey = segmentWidth + 'x' + segmentHeight;
-                    var rand = FlxG.random.int(
-                        0, MAX_SEGMENT_INDEXES[segmentKey]
+                    var segmentPath = (
+                        'assets/data/segments/' + segmentKey + '/'
                     );
-                    var segmentPath = 'assets/data/segments/';
                     if(segmentName == null) {
-                        segmentPath += segmentKey + '/' + rand + '.png';
+                        segmentName = Std.string(FlxG.random.int(
+                            0, MAX_SEGMENT_INDEXES[segmentKey]
+                        ));
                     }
-                    else {
-                        segmentPath += segmentName + '.png';
-                    }
+                    segmentPath += segmentName + '.png';
                     var segment = new Segment(segmentPath);
                     segment.x = segmentX * MIN_SEGMENT_WIDTH;
                     segment.y = segmentY * MIN_SEGMENT_HEIGHT;
