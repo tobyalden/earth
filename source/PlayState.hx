@@ -27,7 +27,7 @@ class PlayState extends FlxState
 
         for(segment in level.segments) {
             add(segment);
-            currentSegment = segment; // temp
+            currentSegment = segment; // temp until level entrances are added
         }
 
         // Add player & option
@@ -92,6 +92,4 @@ class PlayState extends FlxState
         );
         super.update(elapsed);
     }
-
-
 }

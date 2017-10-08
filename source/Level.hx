@@ -32,22 +32,18 @@ class Level extends FlxTilemap
     }
 
     public function generate() {
+        // Add special segments
+        makeEntrance();
+
         // Add large segments
         makeSegment(2, 2);
         makeSegment(3, 1);
+
         // Fill remaining spaces with 1x1 segments
         for (tileX in 0...widthInTiles) {
             for (tileY in 0...heightInTiles) {
-                if(canPlace1x1Segment(tileX, tileY)) {
-                    var rand = FlxG.random.int(
-                        0, MAX_SEGMENT_INDEXES['1x1']
-                    );
-                    var segmentPath = 'assets/data/segments/' + rand + '.png';
-                    var segment = new Segment(segmentPath);
-                    segment.x = tileX * MIN_SEGMENT_WIDTH;
-                    segment.y = tileY * MIN_SEGMENT_HEIGHT;
-                    setSegment(tileX, tileY, segment);
-                    sealSegment(tileX, tileY, 0, 0, segment);
+                if(!hasSegment(tileX, tileY)) {
+                    makeSegment(1, 1);
                 }
             }
         }
@@ -100,7 +96,12 @@ class Level extends FlxTilemap
         }
     }
 
-    public function makeSegment(segmentWidth:Int, segmentHeight:Int) {
+    public function makeEntrance() {
+    }
+
+    public function makeSegment(
+        segmentWidth:Int, segmentHeight:Int, ?segmentName:String=null
+    ) {
         for(segmentX in 0...widthInTiles) {
             for(segmentY in 0...heightInTiles) {
                 if(canPlaceSegment(
@@ -110,9 +111,13 @@ class Level extends FlxTilemap
                     var rand = FlxG.random.int(
                         0, MAX_SEGMENT_INDEXES[segmentKey]
                     );
-                    var segmentPath = (
-                        'assets/data/segments/' + segmentKey + '/' + rand + '.png'
-                    );
+                    var segmentPath = 'assets/data/segments/';
+                    if(segmentName == null) {
+                        segmentPath += segmentKey + '/' + rand + '.png';
+                    }
+                    else {
+                        segmentPath += segmentName + '.png';
+                    }
                     var segment = new Segment(segmentPath);
                     segment.x = segmentX * MIN_SEGMENT_WIDTH;
                     segment.y = segmentY * MIN_SEGMENT_HEIGHT;
