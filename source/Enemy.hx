@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.effects.*;
 import flixel.group.*;
 import flixel.math.*;
 import flixel.system.*;
@@ -36,6 +37,9 @@ class Enemy extends FlxSprite
         health -= 1;
         if(health <= 0) {
             kill();
+        }
+        else {
+            FlxFlicker.flicker(this, 0.25);
         }
     }
 }

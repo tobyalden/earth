@@ -73,6 +73,7 @@ class PlayState extends FlxState
             Bullet.all, Enemy.all,
             function(bullet:FlxObject, enemy:FlxObject) {
                 cast(enemy, Enemy).takeHit();
+                bullet.destroy();
             }
         );
 
