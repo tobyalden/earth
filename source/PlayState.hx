@@ -31,8 +31,10 @@ class PlayState extends FlxState
         }
 
         // Add player & option
+        var entrance = level.specialSegments.get('entrance');
         player = new Player(
-            Std.int(currentSegment.x + 50), Std.int(currentSegment.y + 50)
+            Std.int(entrance.x + entrance.width/2 - 2),
+            Std.int(entrance.y + 3 * Level.TILE_SIZE)
         );
         option = new Option(player);
         add(player);
