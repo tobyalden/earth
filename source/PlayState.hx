@@ -63,6 +63,12 @@ class PlayState extends FlxState
             }
         );
         FlxG.collide(option, Segment.all);
+        FlxG.collide(Enemy.all, Segment.all);
+        for (enemy in Enemy.all) {
+            while(currentSegment.overlaps(enemy)) {
+                cast(enemy, Enemy).y -= 1;
+            }
+        }
         for (bullet in Bullet.all) {
             // Destroy bullets that collide with the current segment's tilemap
             if(currentSegment.overlaps(bullet)) {
