@@ -43,13 +43,26 @@ class Level extends FlxTilemap
         makeSegment(3, 1);
 
         // Fill remaining spaces with 1x1 segments
-        for (tileX in 0...widthInTiles) {
-            for (tileY in 0...heightInTiles) {
-                if(!hasSegment(tileX, tileY)) {
+        for (segmentX in 0...widthInTiles) {
+            for (segmentY in 0...heightInTiles) {
+                if(!hasSegment(segmentX, segmentY)) {
                     makeSegment(1, 1);
                 }
             }
         }
+    }
+
+    public function getEnemyLocations(num:Int) {
+        var enemyLocations = new Array<FlxPoint>();
+        for(i in 0...num) {
+            var segment = getRandomSegment();
+            var tileX = new FlxRandom().int(0, segment.widthInTiles);
+            var tileY = new FlxRandom().int(0, segment.heightInTiles);
+            enemyLocations.push(new FlxPoint(
+                segment.x + tileX * TILE_SIZE, segment.y + tileY * TILE_SIZE
+            ));
+        }
+        return enemyLocations;
     }
 
     private function sealSegments(
@@ -104,16 +117,23 @@ class Level extends FlxTilemap
         specialSegments.set('entrance', entrance);
     }
 
+    private function getShuffledXIndices() {
+        var shuffledXIndices = [for (i in 0...widthInTiles) i];
+        new FlxRandom().shuffle(shuffledXIndices);
+        return shuffledXIndices;
+    }
+
+    private function getShuffledYIndices() {
+        var shuffledYIndices = [for (i in 0...heightInTiles) i];
+        new FlxRandom().shuffle(shuffledYIndices);
+        return shuffledYIndices;
+    }
+
     public function makeSegment(
         segmentWidth:Int, segmentHeight:Int, ?segmentName:String=null
     ) {
-        var shuffledWidth = [for (i in 0...widthInTiles) i];
-        var shuffledHeight = [for (i in 0...heightInTiles) i];
-        var shuffler = new FlxRandom();
-        shuffler.shuffle(shuffledWidth);
-        shuffler.shuffle(shuffledHeight);
-        for(segmentX in shuffledWidth) {
-            for(segmentY in shuffledHeight) {
+        for(segmentX in getShuffledXIndices()) {
+            for(segmentY in getShuffledYIndices()) {
                 if(canPlaceSegment(
                     segmentX, segmentY, segmentWidth, segmentHeight
                 )) {
@@ -151,6 +171,16 @@ class Level extends FlxTilemap
 
     public function getSegment(segmentX:Int, segmentY:Int) {
         return segments.get([segmentX, segmentY].toString());
+    }
+
+    private function getRandomSegment() {
+        var segmentX = new FlxRandom().int(0, widthInTiles);
+        var segmentY = new FlxRandom().int(0, heightInTiles);
+        while(!hasSegment(segmentX, segmentY)) {
+            segmentX = new FlxRandom().int(0, widthInTiles);
+            segmentY = new FlxRandom().int(0, heightInTiles);
+        }
+        return getSegment(segmentX, segmentY);
     }
 
     public function hasSegment(segmentX:Int, segmentY:Int) {

@@ -2,6 +2,7 @@ package;
 
 import flixel.*;
 import flixel.group.*;
+import flixel.math.*;
 import flixel.tile.*;
 
 class Segment extends FlxTilemap
@@ -15,6 +16,15 @@ class Segment extends FlxTilemap
         loadMapFromGraphic(
             path, false, 1, 'assets/images/tiles.png', 16, 16, AUTO
         );
+    }
+
+    public function getRandomTile() {
+        var rand = new FlxRandom();
+        return getTile(rand.int(0, widthInTiles), rand.int(0, heightInTiles));
+    }
+
+    public function getRandomOpenTile() {
+
     }
 
 }
