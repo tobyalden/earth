@@ -109,7 +109,7 @@ class Level extends FlxTilemap
     }
 
     public function makeEntrance() {
-        var entrance = makeSegment(1, 1, 'default');
+        var entrance = makeSegment(1, 1, 'default', true);
         specialSegments.set('entrance', entrance);
     }
 
@@ -126,7 +126,8 @@ class Level extends FlxTilemap
     }
 
     public function makeSegment(
-        segmentWidth:Int, segmentHeight:Int, ?segmentName:String=null
+        segmentWidth:Int, segmentHeight:Int, segmentName:String=null,
+        special:Bool=false
     ) {
         for(segmentX in getShuffledXIndices()) {
             for(segmentY in getShuffledYIndices()) {
@@ -143,7 +144,7 @@ class Level extends FlxTilemap
                         ));
                     }
                     segmentPath += segmentName + '.png';
-                    var segment = new Segment(segmentPath);
+                    var segment = new Segment(segmentPath, special);
                     segment.x = segmentX * MIN_SEGMENT_WIDTH;
                     segment.y = segmentY * MIN_SEGMENT_HEIGHT;
                     setSegments(
@@ -172,7 +173,10 @@ class Level extends FlxTilemap
     private function getRandomSegment() {
         var segmentX = new FlxRandom().int(0, widthInTiles);
         var segmentY = new FlxRandom().int(0, heightInTiles);
-        while(!hasSegment(segmentX, segmentY)) {
+        while(
+            !hasSegment(segmentX, segmentY)
+            || getSegment(segmentX, segmentY).isSpecial()
+        ) {
             segmentX = new FlxRandom().int(0, widthInTiles);
             segmentY = new FlxRandom().int(0, heightInTiles);
         }

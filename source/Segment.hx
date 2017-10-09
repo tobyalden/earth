@@ -9,9 +9,12 @@ class Segment extends FlxTilemap
 {
     public static var all:FlxGroup = new FlxGroup();
 
-    public function new(path:String)
+    public var special:Bool;
+
+    public function new(path:String, special:Bool=false)
     {
         super();
+        this.special = special;
         all.add(this);
         loadMapFromGraphic(
             path, false, 1, 'assets/images/tiles.png', 16, 16, AUTO
@@ -36,4 +39,7 @@ class Segment extends FlxTilemap
         );
     }
 
+    public function isSpecial() {
+        return special;
+    }
 }
