@@ -11,11 +11,14 @@ class Enemy extends FlxSprite
 {
     static public var all:FlxGroup = new FlxGroup();
 
+    public var isActive:Bool;
     private var player:Player;
 
     public function new(x:Int, y:Int, player:Player) {
         super(x, y);
+        this.player = player;
         all.add(this);
+        isActive = false;
     }
 
     public function movement() {
@@ -24,7 +27,15 @@ class Enemy extends FlxSprite
 
     override public function update(elapsed:Float)
     {
-        movement();
+        if(isActive) {
+            movement();
+        }
+        else {
+            acceleration.x = 0;
+            acceleration.y = 0;
+            velocity.x = 0;
+            velocity.y = 0;
+        }
         super.update(elapsed);
     }
 

@@ -65,6 +65,9 @@ class PlayState extends FlxState
         );
         FlxG.collide(option, Segment.all);
         FlxG.collide(Enemy.all, Segment.all);
+        for(enemy in Enemy.all) {
+            cast(enemy, Enemy).isActive = FlxG.overlap(enemy, currentSegment);
+        }
 
         // Push out enemies stuck in walls
         for (enemy in Enemy.all) {

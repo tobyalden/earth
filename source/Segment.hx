@@ -42,4 +42,8 @@ class Segment extends FlxTilemap
     public function isSpecial() {
         return special;
     }
+
+    public function equals(otherSegment:Segment) {
+        return x == otherSegment.x && y == otherSegment.y;
+    }
 }
