@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.input.keyboard.*;
 
 class PlayState extends FlxState
 {
@@ -64,6 +65,8 @@ class PlayState extends FlxState
         );
         FlxG.collide(option, Segment.all);
         FlxG.collide(Enemy.all, Segment.all);
+
+        // Push out enemies stuck in walls
         for (enemy in Enemy.all) {
             while(currentSegment.overlaps(enemy)) {
                 cast(enemy, Enemy).y -= 1;
@@ -101,6 +104,11 @@ class PlayState extends FlxState
             currentSegment.x, currentSegment.y,
             currentSegment.width, currentSegment.height
         );
+
+        // Debug
+        if(FlxG.keys.justPressed.R) {
+            FlxG.switchState(new PlayState());
+        }
         super.update(elapsed);
     }
 }
