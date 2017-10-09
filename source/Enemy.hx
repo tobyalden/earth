@@ -13,12 +13,14 @@ class Enemy extends FlxSprite
 
     public var isActive:Bool;
     private var player:Player;
+    private var startLocation:FlxPoint;
 
     public function new(x:Int, y:Int, player:Player) {
         super(x, y);
         this.player = player;
         all.add(this);
         isActive = false;
+        startLocation = new FlxPoint(x, y);
     }
 
     public function movement() {
@@ -35,6 +37,7 @@ class Enemy extends FlxSprite
             acceleration.y = 0;
             velocity.x = 0;
             velocity.y = 0;
+            setPosition(startLocation.x, startLocation.y);
         }
         super.update(elapsed);
     }
