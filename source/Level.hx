@@ -56,11 +56,7 @@ class Level extends FlxTilemap
         var enemyLocations = new Array<FlxPoint>();
         for(i in 0...num) {
             var segment = getRandomSegment();
-            var tileX = new FlxRandom().int(0, segment.widthInTiles);
-            var tileY = new FlxRandom().int(0, segment.heightInTiles);
-            enemyLocations.push(new FlxPoint(
-                segment.x + tileX * TILE_SIZE, segment.y + tileY * TILE_SIZE
-            ));
+            enemyLocations.push(segment.getEnemyLocation());
         }
         return enemyLocations;
     }

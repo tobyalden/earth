@@ -40,11 +40,11 @@ class PlayState extends FlxState
         add(player);
         add(option);
 
-        var enemyLocations = level.getEnemyLocations(5);
+        // Add enemies
+        var enemyLocations = level.getEnemyLocations(25);
         for(enemyLocation in enemyLocations) {
             var parasite = new Parasite(
-                Std.int(enemyLocation.x), Std.int(enemyLocation.y),
-                player
+                Std.int(enemyLocation.x), Std.int(enemyLocation.y), player
             );
             add(parasite);
         }
