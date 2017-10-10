@@ -236,6 +236,7 @@ class Player extends FlxSprite
     private function respawn(_:FlxTimer) {
         x = lastCheckpoint.x;
         y = lastCheckpoint.y;
+        hangingOnOption = false;
         revive();
     }
 }

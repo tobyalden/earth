@@ -33,11 +33,9 @@ class Enemy extends FlxSprite
             movement();
         }
         else {
-            acceleration.x = 0;
-            acceleration.y = 0;
-            velocity.x = 0;
-            velocity.y = 0;
-            setPosition(startLocation.x, startLocation.y);
+            velocity = new FlxPoint(0, 0);
+            acceleration = new FlxPoint(0, 0);
+            resetPosition();
         }
         super.update(elapsed);
     }
@@ -55,5 +53,12 @@ class Enemy extends FlxSprite
         else {
             FlxFlicker.flicker(this, 0.25);
         }
+    }
+
+    public function resetPosition(newStartLocation:FlxPoint=null) {
+        if(newStartLocation != null) {
+            startLocation = newStartLocation;
+        }
+        setPosition(startLocation.x, startLocation.y);
     }
 }
