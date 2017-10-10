@@ -2,10 +2,12 @@ package;
 
 import flixel.*;
 import flixel.input.keyboard.*;
+import flixel.math.*;
 
 class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 11;
+    public static inline var MIN_ENEMY_DISTANCE = 100;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -63,7 +65,18 @@ class PlayState extends FlxState
                 && !cast(segment, Segment).equals(currentSegment)
             ) {
                 currentSegment = segment;
-                trace('entered segment');
+                FlxG.overlap(
+                    currentSegment, Enemy.all,
+                    function(_:FlxObject, _enemy:FlxObject) {
+                        var enemy = cast(_enemy, Enemy);
+                        while(
+                            FlxMath.distanceBetween(player, enemy)
+                            < MIN_ENEMY_DISTANCE
+                        ) {
+                            enemy.resetPosition(segment.getEnemyLocation());
+                        }
+                    }
+                );
                 break;
             }
         }
@@ -83,7 +96,7 @@ class PlayState extends FlxState
 
         // Destroy enemies stuck in walls
         for (enemy in Enemy.all) {
-            while(currentSegment.overlaps(enemy)) {
+            if(currentSegment.overlaps(enemy)) {
                 enemy.destroy();
             }
         }

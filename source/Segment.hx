@@ -28,11 +28,11 @@ class Segment extends FlxTilemap
 
     public function getEnemyLocation() {
         var rand = new FlxRandom();
-        var randX = rand.int(0, widthInTiles);
-        var randY = rand.int(0, heightInTiles);
+        var randX = rand.int(1, widthInTiles - 1);
+        var randY = rand.int(1, heightInTiles - 1);
         while(getTile(randX, randY) != 0) {
-            randX = rand.int(0, widthInTiles);
-            randY = rand.int(0, heightInTiles);
+            randX = rand.int(1, widthInTiles - 1);
+            randY = rand.int(1, heightInTiles - 1);
         }
         return new FlxPoint(
             x + randX * Level.TILE_SIZE, y + randY * Level.TILE_SIZE
