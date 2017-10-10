@@ -55,11 +55,23 @@ class PlayState extends FlxState
     {
         Controls.controller = FlxG.gamepads.getByID(0);
 
+        // Set current segment
+        for(_segment in Segment.all) {
+            var segment = cast(_segment, Segment);
+            if(
+                FlxG.overlap(segment, new FlxObject(player.x, player.y, 0, 0))
+                && !cast(segment, Segment).equals(currentSegment)
+            ) {
+                currentSegment = segment;
+                trace('entered segment');
+                break;
+            }
+        }
+
         // Collisions
         FlxG.overlap(
             player, Segment.all,
             function(player:FlxObject, segment:FlxObject) {
-                currentSegment = cast(segment, Segment);
                 FlxObject.separate(player, segment);
             }
         );
