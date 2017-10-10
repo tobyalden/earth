@@ -28,11 +28,11 @@ class PlayState extends FlxState
 
         for(segment in level.segments) {
             add(segment);
-            currentSegment = segment; // temp until level entrances are added
         }
 
         // Add player & option
         var entrance = level.specialSegments.get('entrance');
+        currentSegment = entrance;
         player = new Player(
             Std.int(entrance.x + entrance.width/2 - 2),
             Std.int(entrance.y + 3 * Level.TILE_SIZE)
@@ -69,10 +69,10 @@ class PlayState extends FlxState
             cast(enemy, Enemy).isActive = FlxG.overlap(enemy, currentSegment);
         }
 
-        // Push out enemies stuck in walls
+        // Destroy enemies stuck in walls
         for (enemy in Enemy.all) {
             while(currentSegment.overlaps(enemy)) {
-                cast(enemy, Enemy).y -= 1;
+                enemy.destroy();
             }
         }
         for (bullet in Bullet.all) {
