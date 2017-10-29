@@ -44,7 +44,7 @@ class PlayState extends FlxState
         add(option);
 
         // Add enemies
-        var enemyLocations = level.getEnemyLocations(25);
+        var enemyLocations = level.getEnemyLocations(100);
         for(enemyLocation in enemyLocations) {
             var parasite = new Parasite(
                 Std.int(enemyLocation.x), Std.int(enemyLocation.y), player
@@ -89,6 +89,7 @@ class PlayState extends FlxState
             }
         );
         FlxG.collide(option, Segment.all);
+        FlxG.collide(Enemy.all, Enemy.all);
         FlxG.collide(Enemy.all, Segment.all);
         for(enemy in Enemy.all) {
             cast(enemy, Enemy).isActive = FlxG.overlap(enemy, currentSegment);

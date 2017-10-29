@@ -18,9 +18,9 @@ class Level extends FlxTilemap
 
     public static var MAX_SEGMENT_INDEXES = [
         '1x1' => 10,
-        '2x2' => 0,
+        '2x2' => 5,
         '3x3' => 0,
-        '3x1' => 0
+        '3x1' => 4
     ];
 
     public var segments:Map<String, Segment>;
@@ -41,6 +41,8 @@ class Level extends FlxTilemap
         // Add large segments
         makeSegment(2, 2);
         makeSegment(3, 1);
+        makeSegment(3, 1);
+        makeSegment(2, 2);
 
         // Fill remaining spaces with 1x1 segments
         for (segmentX in 0...widthInTiles) {
