@@ -104,7 +104,12 @@ class Player extends FlxSprite
             if(Controls.checkJustPressed('shoot')) {
                 swordTimer.start(SWORD_COOLDOWN);
                 sword.visible = true;
-                sword.animation.play('slash1');
+                if(sword.animation.name == 'slash1') {
+                    sword.animation.play('slash2');
+                }
+                else {
+                    sword.animation.play('slash1');
+                }
             }
         }
         if(sword.animation.finished) {
