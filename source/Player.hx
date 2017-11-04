@@ -76,7 +76,7 @@ class Player extends FlxSprite
         lastCheckpoint = new FlxPoint(x, y);
 
         sword = new FlxSprite(0, 0);
-        sword.loadGraphic('assets/images/slash.png', true, 64, 32);
+        sword.loadGraphic('assets/images/slash.png', true, 80, 32);
         sword.setSize(24, 24);
         sword.animation.add('slash1', [0, 1, 2], 5, true);
         sword.animation.add('slash2', [3, 4, 5], 5, true);
@@ -110,11 +110,14 @@ class Player extends FlxSprite
     private function setSwordPosition() {
         sword.facing = facing;
         sword.y = y - (sword.height - height)/2;
+        sword.offset.y = 11;
         if(facing == FlxObject.LEFT) {
             sword.x = x - sword.width;
+            sword.offset.x = 20;
         }
         else {
             sword.x = x + width;
+            sword.offset.x = 36;
         }
     }
 
