@@ -45,8 +45,8 @@ class Enemy extends FlxSprite
         super.kill();
     }
 
-    public function takeHit() {
-        health -= 1;
+    public function takeHit(damage:Int) {
+        health -= damage;
         if(health <= 0) {
             kill();
         }

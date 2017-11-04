@@ -80,8 +80,8 @@ class Player extends FlxSprite
         sword = new FlxSprite(0, 0);
         sword.loadGraphic('assets/images/slash.png', true, 80, 32);
         sword.setSize(24, 24);
-        sword.animation.add('slash1', [0, 1, 2], 5, false);
-        sword.animation.add('slash2', [3, 4, 5], 5, false);
+        sword.animation.add('slash1', [0, 1, 2], 17, false);
+        sword.animation.add('slash2', [3, 4, 5], 17, false);
         sword.setFacingFlip(FlxObject.LEFT, true, false);
         sword.setFacingFlip(FlxObject.RIGHT, false, false);
         sword.animation.play('slash1');

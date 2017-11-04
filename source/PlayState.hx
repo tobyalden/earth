@@ -116,8 +116,17 @@ class PlayState extends FlxState
         FlxG.overlap(
             Bullet.all, Enemy.all,
             function(bullet:FlxObject, enemy:FlxObject) {
-                cast(enemy, Enemy).takeHit();
+                cast(enemy, Enemy).takeHit(1);
                 bullet.destroy();
+            }
+        );
+
+        FlxG.overlap(
+            player.getSword(), Enemy.all,
+            function(sword:FlxObject, enemy:FlxObject) {
+                if(sword.visible) {
+                    cast(enemy, Enemy).takeHit(10);
+                }
             }
         );
 
