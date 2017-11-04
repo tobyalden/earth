@@ -25,6 +25,7 @@ class Player extends FlxSprite
     public static inline var OPTION_LIFT = 10;
     public static inline var MAX_LIFT_SPEED = 150;
     public static inline var SHOT_COOLDOWN = 0.5;
+    public static inline var SWORD_COOLDOWN = 0.5;
 
     private var isOnGround:Bool;
     private var wasOnGround:FlxTimer;
@@ -39,6 +40,7 @@ class Player extends FlxSprite
 
     private var lastCheckpoint:FlxPoint;
     private var sword:FlxSprite;
+    private var swordTimer:FlxTimer;
 
     public function new(x:Int, y:Int)
     {
@@ -78,11 +80,12 @@ class Player extends FlxSprite
         sword = new FlxSprite(0, 0);
         sword.loadGraphic('assets/images/slash.png', true, 80, 32);
         sword.setSize(24, 24);
-        sword.animation.add('slash1', [0, 1, 2], 5, true);
-        sword.animation.add('slash2', [3, 4, 5], 5, true);
+        sword.animation.add('slash1', [0, 1, 2], 5, false);
+        sword.animation.add('slash2', [3, 4, 5], 5, false);
         sword.setFacingFlip(FlxObject.LEFT, true, false);
         sword.setFacingFlip(FlxObject.RIGHT, false, false);
         sword.animation.play('slash1');
+        swordTimer = new FlxTimer();
     }
 
     override public function update(elapsed:Float)
@@ -97,6 +100,16 @@ class Player extends FlxSprite
         isLookingUp = Controls.checkPressed('up');
         isLookingDown = Controls.checkPressed('down');
         move();
+        if(!swordTimer.active) {
+            if(Controls.checkJustPressed('shoot')) {
+                swordTimer.start(SWORD_COOLDOWN);
+                sword.visible = true;
+                sword.animation.play('slash1');
+            }
+        }
+        if(sword.animation.finished) {
+            sword.visible = false;
+        }
         animate();
         sound();
         super.update(elapsed);
