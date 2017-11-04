@@ -41,6 +41,7 @@ class PlayState extends FlxState
         );
         option = new Option(player);
         add(player);
+        add(player.getSword());
         add(option);
 
         // Add enemies

@@ -38,6 +38,7 @@ class Player extends FlxSprite
     private var landSfx:FlxSound;
 
     private var lastCheckpoint:FlxPoint;
+    private var sword:FlxSprite;
 
     public function new(x:Int, y:Int)
     {
@@ -73,6 +74,15 @@ class Player extends FlxSprite
         runSfx.looped = true;
 
         lastCheckpoint = new FlxPoint(x, y);
+
+        sword = new FlxSprite(0, 0);
+        sword.loadGraphic('assets/images/slash.png', true, 64, 32);
+        sword.setSize(24, 24);
+        sword.animation.add('slash1', [0, 1, 2], 5, true);
+        sword.animation.add('slash2', [3, 4, 5], 5, true);
+        sword.setFacingFlip(FlxObject.LEFT, true, false);
+        sword.setFacingFlip(FlxObject.RIGHT, false, false);
+        sword.animation.play('slash1');
     }
 
     override public function update(elapsed:Float)
@@ -90,6 +100,22 @@ class Player extends FlxSprite
         animate();
         sound();
         super.update(elapsed);
+        setSwordPosition();
+    }
+
+    public function getSword() {
+        return sword;
+    }
+
+    private function setSwordPosition() {
+        sword.facing = facing;
+        sword.y = y - (sword.height - height)/2;
+        if(facing == FlxObject.LEFT) {
+            sword.x = x - sword.width;
+        }
+        else {
+            sword.x = x + width;
+        }
     }
 
     override public function kill() {
