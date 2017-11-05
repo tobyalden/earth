@@ -26,6 +26,8 @@ class Player extends FlxSprite
     public static inline var MAX_LIFT_SPEED = 150;
     public static inline var SHOT_COOLDOWN = 0.5;
     public static inline var SWORD_COOLDOWN = 0.5;
+    public static inline var PUSHBACK_SPEED = 200;
+    public static inline var PUSHBACK_DURATION = 0.5;
 
     private var isOnGround:Bool;
     private var wasOnGround:FlxTimer;
@@ -41,6 +43,8 @@ class Player extends FlxSprite
     private var lastCheckpoint:FlxPoint;
     private var sword:FlxSprite;
     private var swordTimer:FlxTimer;
+
+    private var pushBackTimer:FlxTimer;
 
     public function new(x:Int, y:Int)
     {
@@ -86,6 +90,8 @@ class Player extends FlxSprite
         sword.setFacingFlip(FlxObject.RIGHT, false, false);
         sword.animation.play('slash1');
         swordTimer = new FlxTimer();
+
+        pushBackTimer = new FlxTimer();
     }
 
     override public function update(elapsed:Float)
@@ -120,6 +126,17 @@ class Player extends FlxSprite
         super.update(elapsed);
         setSwordPosition();
     }
+
+    public function pushBack(direction:Int) {
+        pushBackTimer.start(PUSHBACK_DURATION);
+        if(direction == FlxObject.LEFT) {
+            velocity.x = -PUSHBACK_SPEED;
+        }
+        else if(direction == FlxObject.RIGHT) {
+            velocity.x = PUSHBACK_SPEED;
+        }
+    }
+
 
     public function getSword() {
         return sword;
@@ -209,12 +226,15 @@ class Player extends FlxSprite
             }
         }
 
-        var speed = SPEED;
-        if(hangingOnOption) {
-            speed = OPTION_SPEED;
+        var maxSpeed = SPEED;
+        if(pushBackTimer.active) {
+            maxSpeed = PUSHBACK_SPEED;
         }
-        velocity.x = Math.min(velocity.x, speed);
-        velocity.x = Math.max(velocity.x, -speed);
+        else if(hangingOnOption) {
+            maxSpeed = OPTION_SPEED;
+        }
+        velocity.x = Math.min(velocity.x, maxSpeed);
+        velocity.x = Math.max(velocity.x, -maxSpeed);
         if(hangingOnOption) {
             velocity.y = Math.max(
                 velocity.y - OPTION_LIFT, -MAX_LIFT_SPEED

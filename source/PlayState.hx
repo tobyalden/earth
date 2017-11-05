@@ -125,7 +125,13 @@ class PlayState extends FlxState
             player.getSword(), Enemy.all,
             function(sword:FlxObject, enemy:FlxObject) {
                 if(sword.visible) {
-                    cast(enemy, Enemy).takeHit(10);
+                    cast(enemy, Enemy).takeHit(0);
+                    if(player.x < enemy.x) {
+                        player.pushBack(FlxObject.LEFT);
+                    }
+                    else {
+                        player.pushBack(FlxObject.RIGHT);
+                    }
                 }
             }
         );
