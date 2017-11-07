@@ -45,7 +45,7 @@ class PlayState extends FlxState
         add(option);
 
         // Add enemies
-        var enemyLocations = level.getEnemyLocations(100);
+        var enemyLocations = level.getEnemyLocations(10);
         for(enemyLocation in enemyLocations) {
             var parasite = new Parasite(
                 Std.int(enemyLocation.x), Std.int(enemyLocation.y), player
@@ -116,7 +116,7 @@ class PlayState extends FlxState
         FlxG.overlap(
             Bullet.all, Enemy.all,
             function(bullet:FlxObject, enemy:FlxObject) {
-                cast(enemy, Enemy).takeHit(1);
+                cast(enemy, Enemy).takeHit(Player.SHOT_DAMAGE);
                 bullet.destroy();
             }
         );
@@ -125,7 +125,7 @@ class PlayState extends FlxState
             player.getSword(), Enemy.all,
             function(sword:FlxObject, enemy:FlxObject) {
                 if(sword.visible) {
-                    cast(enemy, Enemy).takeHit(0);
+                    cast(enemy, Enemy).takeHit(Player.SLASH_DAMAGE);
                     if(player.x < enemy.x) {
                         player.pushBack(FlxObject.LEFT);
                     }

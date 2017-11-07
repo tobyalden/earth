@@ -25,8 +25,10 @@ class Player extends FlxSprite
     public static inline var OPTION_LIFT = 10;
     public static inline var MAX_LIFT_SPEED = 150;
     public static inline var SHOT_COOLDOWN = 0.5;
+    public static inline var SHOT_DAMAGE = 1;
     public static inline var SLASH_COOLDOWN = 0.1;
     public static inline var SLASH_PAUSE = 0.2;
+    public static inline var SLASH_DAMAGE = 3;
     public static inline var PUSHBACK_SPEED = 200;
     public static inline var PUSHBACK_DURATION = 0.5;
 
