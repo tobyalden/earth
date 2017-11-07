@@ -25,7 +25,8 @@ class Player extends FlxSprite
     public static inline var OPTION_LIFT = 10;
     public static inline var MAX_LIFT_SPEED = 150;
     public static inline var SHOT_COOLDOWN = 0.5;
-    public static inline var SWORD_COOLDOWN = 0.5;
+    public static inline var SLASH_COOLDOWN = 0.1;
+    public static inline var SLASH_PAUSE = 0.2;
     public static inline var PUSHBACK_SPEED = 200;
     public static inline var PUSHBACK_DURATION = 0.5;
 
@@ -42,7 +43,8 @@ class Player extends FlxSprite
 
     private var lastCheckpoint:FlxPoint;
     private var sword:FlxSprite;
-    private var swordTimer:FlxTimer;
+    private var slashCooldown:FlxTimer;
+    private var slashPause:FlxTimer;
 
     private var pushBackTimer:FlxTimer;
 
@@ -89,7 +91,8 @@ class Player extends FlxSprite
         sword.setFacingFlip(FlxObject.LEFT, true, false);
         sword.setFacingFlip(FlxObject.RIGHT, false, false);
         sword.animation.play('slash1');
-        swordTimer = new FlxTimer();
+        slashCooldown = new FlxTimer();
+        slashPause = new FlxTimer();
 
         pushBackTimer = new FlxTimer();
     }
@@ -106,9 +109,18 @@ class Player extends FlxSprite
         isLookingUp = Controls.checkPressed('up');
         isLookingDown = Controls.checkPressed('down');
         move();
-        if(!swordTimer.active) {
+        if(slashPause.active) {
+            if(isOnGround && !pushBackTimer.active) {
+                velocity.x = 0;
+                acceleration.x = 0;
+            }
+        }
+        if(!slashCooldown.active) {
             if(Controls.checkJustPressed('shoot')) {
-                swordTimer.start(SWORD_COOLDOWN);
+                slashCooldown.start(SLASH_COOLDOWN);
+                if(isOnGround) {
+                    slashPause.start(SLASH_PAUSE);
+                }
                 sword.visible = true;
                 if(sword.animation.name == 'slash1') {
                     sword.animation.play('slash2');
