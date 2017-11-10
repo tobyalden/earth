@@ -26,13 +26,22 @@ class Segment extends FlxTilemap
         return getTile(rand.int(0, widthInTiles), rand.int(0, heightInTiles));
     }
 
-    public function getEnemyLocation() {
+    public function getEnemyLocation(onGround:Bool) {
         var rand = new FlxRandom();
         var randX = rand.int(1, widthInTiles - 1);
         var randY = rand.int(1, heightInTiles - 1);
         while(getTile(randX, randY) != 0) {
             randX = rand.int(1, widthInTiles - 1);
             randY = rand.int(1, heightInTiles - 1);
+        }
+        if(onGround) {
+            while(getTile(randX, randY + 1) == 0) {
+                randY += 1;
+            }
+            // Restart if we hit the bottom of the map
+            if(randY == heightInTiles - 1) {
+                return getEnemyLocation(true);
+            }
         }
         return new FlxPoint(
             x + randX * Level.TILE_SIZE, y + randY * Level.TILE_SIZE

@@ -12,6 +12,7 @@ class Enemy extends FlxSprite
     static public var all:FlxGroup = new FlxGroup();
 
     public var isActive:Bool;
+    private var canFly:Bool;
     private var player:Player;
     private var startLocation:FlxPoint;
 
@@ -19,6 +20,7 @@ class Enemy extends FlxSprite
         super(x, y);
         this.player = player;
         all.add(this);
+        canFly = false;
         isActive = false;
         startLocation = new FlxPoint(x, y);
     }
@@ -60,5 +62,9 @@ class Enemy extends FlxSprite
             startLocation = newStartLocation;
         }
         setPosition(startLocation.x, startLocation.y);
+    }
+
+    public function startsOnGround() {
+        return !canFly;
     }
 }

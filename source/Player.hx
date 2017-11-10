@@ -48,7 +48,7 @@ class Player extends FlxSprite
     private var slashCooldown:FlxTimer;
     private var slashPause:FlxTimer;
 
-    private var pushBackTimer:FlxTimer;
+    private var pushback:FlxTimer;
 
     public function new(x:Int, y:Int)
     {
@@ -96,7 +96,7 @@ class Player extends FlxSprite
         slashCooldown = new FlxTimer();
         slashPause = new FlxTimer();
 
-        pushBackTimer = new FlxTimer();
+        pushback = new FlxTimer();
     }
 
     override public function update(elapsed:Float)
@@ -112,7 +112,7 @@ class Player extends FlxSprite
         isLookingDown = Controls.checkPressed('down');
         move();
         if(slashPause.active) {
-            if(isOnGround && !pushBackTimer.active) {
+            if(isOnGround && !pushback.active) {
                 velocity.x = 0;
                 acceleration.x = 0;
             }
@@ -142,7 +142,7 @@ class Player extends FlxSprite
     }
 
     public function pushBack(direction:Int) {
-        pushBackTimer.start(PUSHBACK_DURATION);
+        pushback.start(PUSHBACK_DURATION);
         if(direction == FlxObject.LEFT) {
             velocity.x = -PUSHBACK_SPEED;
         }
@@ -241,7 +241,7 @@ class Player extends FlxSprite
         }
 
         var maxSpeed = SPEED;
-        if(pushBackTimer.active) {
+        if(pushback.active) {
             maxSpeed = PUSHBACK_SPEED;
         }
         else if(hangingOnOption) {

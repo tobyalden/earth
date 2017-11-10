@@ -16,6 +16,7 @@ class Parasite extends Enemy
         animation.add('idle', [0, 1, 2, 3, 4], 10);
         animation.play('idle');
         health = 3;
+        canFly = true;
     }
 
     override public function movement()

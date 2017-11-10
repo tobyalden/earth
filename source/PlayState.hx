@@ -8,6 +8,7 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 11;
     public static inline var MIN_ENEMY_DISTANCE = 100;
+    public static inline var NUMBER_OF_ENEMIES = 100;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -45,12 +46,21 @@ class PlayState extends FlxState
         add(option);
 
         // Add enemies
-        var enemyLocations = level.getEnemyLocations(10);
-        for(enemyLocation in enemyLocations) {
-            var parasite = new Parasite(
-                Std.int(enemyLocation.x), Std.int(enemyLocation.y), player
-            );
-            add(parasite);
+        for(i in 0...NUMBER_OF_ENEMIES) {
+            var enemy:Enemy;
+            if(new FlxRandom().bool()) {
+                var location = level.getEnemyLocation(true);
+                enemy = new Jumper(
+                    Std.int(location.x), Std.int(location.y), player
+                );
+            }
+            else {
+                var location = level.getEnemyLocation(false);
+                enemy = new Parasite(
+                    Std.int(location.x), Std.int(location.y), player
+                );
+            }
+            add(enemy);
         }
     }
 
@@ -74,7 +84,11 @@ class PlayState extends FlxState
                             FlxMath.distanceBetween(player, enemy)
                             < MIN_ENEMY_DISTANCE
                         ) {
-                            enemy.resetPosition(segment.getEnemyLocation());
+                            enemy.resetPosition(
+                                segment.getEnemyLocation(
+                                    enemy.startsOnGround()
+                                )
+                            );
                         }
                     }
                 );
@@ -99,7 +113,7 @@ class PlayState extends FlxState
         // Destroy enemies stuck in walls
         for (enemy in Enemy.all) {
             if(currentSegment.overlaps(enemy)) {
-                enemy.destroy();
+                enemy.kill();
             }
         }
         for (bullet in Bullet.all) {
