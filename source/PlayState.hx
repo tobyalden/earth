@@ -166,6 +166,8 @@ class PlayState extends FlxState
 
         // Debug
         if(FlxG.keys.justPressed.R) {
+            // TODO: Fix bug where entities aren't getting removed when a
+            // state is switched, causing the game to run slower and slower
             FlxG.switchState(new PlayState());
         }
         super.update(elapsed);
