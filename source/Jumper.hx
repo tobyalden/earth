@@ -29,7 +29,6 @@ class Jumper extends Enemy
 
     override public function update(elapsed:Float)
     {
-        // TODO: Don't reset position if jumper jumps offscreen
         // TODO: Clean up / fix animation
         isOnGround = isTouching(FlxObject.DOWN);
         if(isOnGround) {
