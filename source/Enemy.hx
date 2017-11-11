@@ -17,6 +17,7 @@ class Enemy extends FlxSprite
     private var startLocation:FlxPoint;
 
     public function new(x:Int, y:Int, player:Player) {
+        // TODO: Destroy all timers when an enemy is killed
         super(x, y);
         this.player = player;
         all.add(this);
@@ -43,7 +44,13 @@ class Enemy extends FlxSprite
     }
 
     override public function kill() {
+        all.remove(this);
         FlxG.state.add(new Explosion(this));
+        super.kill();
+    }
+
+    public function killQuietly() {
+        all.remove(this);
         super.kill();
     }
 

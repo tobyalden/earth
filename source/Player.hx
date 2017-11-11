@@ -170,13 +170,6 @@ class Player extends FlxSprite
         }
     }
 
-    override public function kill() {
-        deathSfx.play();
-        FlxG.state.add(new Explosion(this));
-        runSfx.stop();
-        super.kill();
-    }
-
     private function move()
     {
         if(isOnGround) {
@@ -310,6 +303,8 @@ class Player extends FlxSprite
 
     private function die() {
         FlxG.state.add(new Explosion(this));
+        deathSfx.play();
+        runSfx.stop();
         kill();
         new FlxTimer().start(2, respawn);
     }

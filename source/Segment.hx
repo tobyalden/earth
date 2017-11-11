@@ -21,30 +21,35 @@ class Segment extends FlxTilemap
         );
     }
 
-    public function getRandomTile() {
+    public function getRandomPosition() {
         var rand = new FlxRandom();
-        return getTile(rand.int(0, widthInTiles), rand.int(0, heightInTiles));
+        return {
+            x: rand.int(1, widthInTiles - 2),
+            y: rand.int(1, heightInTiles - 2)
+        }
+    }
+
+    public function getRandomOpenPosition() {
+        var randomOpenPosition = getRandomPosition();
+        while(getTile(randomOpenPosition.x, randomOpenPosition.y) != 0) {
+            randomOpenPosition = getRandomPosition();
+        }
+        return randomOpenPosition;
     }
 
     public function getEnemyLocation(onGround:Bool) {
-        var rand = new FlxRandom();
-        var randX = rand.int(1, widthInTiles - 1);
-        var randY = rand.int(1, heightInTiles - 1);
-        while(getTile(randX, randY) != 0) {
-            randX = rand.int(1, widthInTiles - 1);
-            randY = rand.int(1, heightInTiles - 1);
-        }
+        var location = getRandomOpenPosition();
         if(onGround) {
-            while(getTile(randX, randY + 1) == 0) {
-                randY += 1;
+            while(getTile(location.x, location.y + 1) == 0) {
+                location.y += 1;
             }
             // Restart if we hit the bottom of the map
-            if(randY == heightInTiles - 1) {
+            if(location.y == heightInTiles - 2) {
                 return getEnemyLocation(true);
             }
         }
         return new FlxPoint(
-            x + randX * Level.TILE_SIZE, y + randY * Level.TILE_SIZE
+            x + location.x * Level.TILE_SIZE, y + location.y * Level.TILE_SIZE
         );
     }
 

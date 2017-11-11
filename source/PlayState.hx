@@ -113,7 +113,7 @@ class PlayState extends FlxState
         // Destroy enemies stuck in walls
         for (enemy in Enemy.all) {
             if(currentSegment.overlaps(enemy)) {
-                enemy.kill();
+                cast(enemy, Enemy).killQuietly();
             }
         }
         for (bullet in Bullet.all) {
@@ -166,10 +166,16 @@ class PlayState extends FlxState
 
         // Debug
         if(FlxG.keys.justPressed.R) {
-            // TODO: Fix bug where entities aren't getting removed when a
-            // state is switched, causing the game to run slower and slower
             FlxG.switchState(new PlayState());
         }
         super.update(elapsed);
+    }
+
+    override public function switchTo(nextState:FlxState):Bool
+    {
+        Enemy.all.clear();
+        Segment.all.clear();
+        Bullet.all.clear();
+        return true;
     }
 }
