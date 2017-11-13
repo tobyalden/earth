@@ -64,6 +64,32 @@ class PlayState extends FlxState
         }
     }
 
+    public function enterSegment(segment:Segment) {
+        currentSegment = segment;
+
+        // Move enemies away from player
+        FlxG.overlap(
+            currentSegment, Enemy.all,
+            function(_:FlxObject, _enemy:FlxObject) {
+                var enemy = cast(_enemy, Enemy);
+                for(min in [MIN_ENEMY_DISTANCE, MIN_ENEMY_DISTANCE/2]) {
+                    for(i in 0...100) {
+                        if(FlxMath.distanceBetween(player, enemy) < min) {
+                            enemy.resetPosition(
+                                segment.getEnemyLocation(
+                                    enemy.startsOnGround()
+                                )
+                            );
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+            }
+        );
+    }
+
     override public function update(elapsed:Float):Void
     {
         Controls.controller = FlxG.gamepads.getByID(0);
@@ -75,24 +101,9 @@ class PlayState extends FlxState
                 FlxG.overlap(segment, new FlxObject(player.x, player.y, 0, 0))
                 && !cast(segment, Segment).equals(currentSegment)
             ) {
-                currentSegment = segment;
-                FlxG.overlap(
-                    currentSegment, Enemy.all,
-                    function(_:FlxObject, _enemy:FlxObject) {
-                        var enemy = cast(_enemy, Enemy);
-                        while(
-                            FlxMath.distanceBetween(player, enemy)
-                            < MIN_ENEMY_DISTANCE
-                        ) {
-                            enemy.resetPosition(
-                                segment.getEnemyLocation(
-                                    enemy.startsOnGround()
-                                )
-                            );
-                        }
-                    }
-                );
-                break;
+
+                enterSegment(segment);
+                return;
             }
         }
 
