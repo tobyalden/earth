@@ -4,11 +4,16 @@ import flixel.*;
 import flixel.input.keyboard.*;
 import flixel.math.*;
 
+
+// TODO: Keep ground based enemies from falling into exits created after their
+// entrance is placed.
+// TODO: Set enemies starting position to rooms they move into
+
 class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 11;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 100;
+    public static inline var NUMBER_OF_ENEMIES = 45;
 
     private var level:Level;
     private var currentSegment:Segment;
