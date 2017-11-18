@@ -105,9 +105,6 @@ class PlayState extends FlxState
         );
 
         // Activate enemies in new segment, deactivate and reset in old
-        // TODO: Hide this "reset" from the player;
-        // currently it's visible for a split second. Could defer resetting
-        // by setting a "should reset" variable on the enemy, perhaps..?
         for(_enemy in Enemy.all) {
             var enemy = cast(_enemy, Enemy);
             var inPreviousSegment = FlxG.overlap(enemy, previousSegment);
