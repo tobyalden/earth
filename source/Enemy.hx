@@ -38,7 +38,6 @@ class Enemy extends FlxSprite
         else {
             velocity = new FlxPoint(0, 0);
             acceleration = new FlxPoint(0, 0);
-            resetPosition();
             // TODO: Don't reset position if enemies go offscreen by
             // themselves - only if the player goes offscreen!
         }

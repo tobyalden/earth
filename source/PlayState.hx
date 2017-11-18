@@ -126,11 +126,20 @@ class PlayState extends FlxState
                 FlxObject.separate(player, segment);
             }
         );
-        //FlxG.collide(option, Segment.all);
+        if(option != null) {
+            FlxG.collide(option, Segment.all);
+        }
         FlxG.collide(Enemy.all, Enemy.all);
         FlxG.collide(Enemy.all, Segment.all);
-        for(enemy in Enemy.all) {
-            cast(enemy, Enemy).isActive = FlxG.overlap(enemy, currentSegment);
+        for(_enemy in Enemy.all) {
+            var enemy = cast(_enemy, Enemy);
+            var isActive = FlxG.overlap(enemy, currentSegment);
+            if(enemy.isActive != isActive) {
+                if(!isActive) {
+                    enemy.resetPosition();
+                }
+                enemy.isActive = isActive;
+            }
         }
 
         // Destroy enemies stuck in walls
