@@ -19,8 +19,12 @@ class Player extends FlxSprite
     public static inline var TERMINAL_VELOCITY = 300;
     public static inline var PUSHBACK_SPEED = 200;
     public static inline var PUSHBACK_DURATION = 0.5;
+    public static inline var SHOT_SPEED = 600;
+    public static inline var SHOT_SPREAD = 45;
     public static inline var SHOT_COOLDOWN = 0.5;
     public static inline var SHOT_DAMAGE = 1;
+    public static inline var BULLET_KICKBACK_UP = 260;
+    public static inline var BULLET_KICKBACK_SIDE = 200;
 
     private var isOnGround:Bool;
     private var wasOnGround:FlxTimer;
@@ -31,9 +35,11 @@ class Player extends FlxSprite
     private var deathSfx:FlxSound;
     private var jumpSfx:FlxSound;
     private var landSfx:FlxSound;
+    private var shootSfx:FlxSound;
 
     private var lastCheckpoint:FlxPoint;
 
+    private var shotCooldown:FlxTimer;
     private var pushback:FlxTimer;
 
     public function new(x:Int, y:Int)
@@ -66,11 +72,14 @@ class Player extends FlxSprite
         deathSfx = FlxG.sound.load('assets/sounds/death.wav');
         jumpSfx = FlxG.sound.load('assets/sounds/jump.wav');
         landSfx = FlxG.sound.load('assets/sounds/land.wav');
+        shootSfx = FlxG.sound.load('assets/sounds/shoot.wav');
         runSfx.looped = true;
 
         lastCheckpoint = new FlxPoint(x, y);
 
         pushback = new FlxTimer();
+        shotCooldown = new FlxTimer();
+        shotCooldown.loops = 1;
     }
 
     override public function update(elapsed:Float)
@@ -84,10 +93,62 @@ class Player extends FlxSprite
         isOnGround = isTouching(FlxObject.DOWN);
         isLookingUp = Controls.checkPressed('up');
         isLookingDown = Controls.checkPressed('down');
+        if(Controls.checkJustPressed('shoot')) {
+            shoot();
+        }
         move();
         animate();
         sound();
         super.update(elapsed);
+    }
+
+    private function shoot()
+    {
+        if(shotCooldown.active) {
+            return;
+        }
+        shotCooldown.reset(SHOT_COOLDOWN);
+        shootSfx.play(true);
+        var bulletVelocity = new FlxPoint(0, 0);
+        if(!isOnGround && isLookingDown) {
+            bulletVelocity.y = SHOT_SPEED;
+        }
+        else if(isLookingUp) {
+            bulletVelocity.y = -SHOT_SPEED;
+        }
+        else if(facing == FlxObject.LEFT) {
+            bulletVelocity.x = -SHOT_SPEED;
+        }
+        else if(facing == FlxObject.RIGHT) {
+            bulletVelocity.x = SHOT_SPEED;
+        }
+        if(bulletVelocity.x < 0) {
+            velocity.x = BULLET_KICKBACK_SIDE;
+        }
+        else if(bulletVelocity.x > 0) {
+            velocity.x = -BULLET_KICKBACK_SIDE;
+        }
+        if (bulletVelocity.y > 0) {
+            velocity.y = Math.min(
+                -BULLET_KICKBACK_UP, velocity.y - BULLET_KICKBACK_UP/5
+            );
+        }
+        for (i in 0...3) {
+            var offset = i - 1;
+            var offsetVelocity = new FlxPoint(
+                bulletVelocity.x, bulletVelocity.y
+            );
+            if(Math.abs(offsetVelocity.x) > Math.abs(offsetVelocity.y)) {
+                offsetVelocity.y += offset * SHOT_SPREAD;
+            }
+            else {
+                offsetVelocity.x += offset * SHOT_SPREAD;
+            }
+            var bullet = new Bullet(
+                Std.int(x + 8), Std.int(y + 8), offsetVelocity
+            );
+            FlxG.state.add(bullet);
+        }
     }
 
     public function pushBack(direction:Int) {

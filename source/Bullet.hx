@@ -9,7 +9,6 @@ import flixel.util.*;
 class Bullet extends FlxSprite
 {
     public static inline var SIZE = 4;
-    public static inline var SPEED = 600;
     public static inline var GRAVITY = 3;
     //private var hitSfx:FlxSound;
 

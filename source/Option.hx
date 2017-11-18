@@ -12,6 +12,7 @@ class Option extends FlxSprite
     public static inline var ACCELERATION = 20000;
     public static inline var MAX_SPEED = 120000;
 
+    public static inline var SHOT_SPEED = 600;
     public static inline var SHOT_COOLDOWN = 0.25;
 
     private var player:SecretPlayer;
@@ -113,15 +114,15 @@ class Option extends FlxSprite
     {
         if(!shootTimer.active && !player.isHangingOnOption()) {
             shootTimer.reset(SHOT_COOLDOWN);
-            var bulletVelocity = new FlxPoint(Bullet.SPEED, 0);
+            var bulletVelocity = new FlxPoint(SHOT_SPEED, 0);
             if (player.facing == FlxObject.LEFT) {
-                bulletVelocity.x = -Bullet.SPEED;
+                bulletVelocity.x = -SHOT_SPEED;
             }
             if(Controls.checkPressed('down')) {
-                bulletVelocity.y = Bullet.SPEED;
+                bulletVelocity.y = SHOT_SPEED;
             }
             if(Controls.checkPressed('up')) {
-                bulletVelocity.y = -Bullet.SPEED;
+                bulletVelocity.y = -SHOT_SPEED;
             }
             var bullet = new Bullet(
                 Std.int(x + width/2), Std.int(y + height/2), bulletVelocity
