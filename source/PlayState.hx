@@ -5,8 +5,6 @@ import flixel.input.keyboard.*;
 import flixel.math.*;
 
 
-// TODO: Keep ground based enemies from falling into exits created after their
-// entrance is placed.
 // TODO: Set enemies starting position to rooms they move into
 
 class PlayState extends FlxState

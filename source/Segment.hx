@@ -42,10 +42,10 @@ class Segment extends FlxTilemap
         if(onGround) {
             while(getTile(location.x, location.y + 1) == 0) {
                 location.y += 1;
-            }
-            // Restart if we hit the bottom of the map
-            if(location.y == heightInTiles - 2) {
-                return getEnemyLocation(true);
+                // Restart if we hit the bottom of the map
+                if(location.y >= heightInTiles - 2) {
+                    return getEnemyLocation(true);
+                }
             }
         }
         return new FlxPoint(
