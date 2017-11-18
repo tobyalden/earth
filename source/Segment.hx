@@ -48,8 +48,14 @@ class Segment extends FlxTilemap
                 }
             }
         }
+        var yOffset = 0;
+        if(onGround && getTile(location.x, location.y - 1) == 0) {
+            yOffset = 4;
+        }
+
         return new FlxPoint(
-            x + location.x * Level.TILE_SIZE, y + location.y * Level.TILE_SIZE
+            x + location.x * Level.TILE_SIZE,
+            y + location.y * Level.TILE_SIZE - yOffset
         );
     }
 
