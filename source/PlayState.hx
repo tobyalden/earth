@@ -77,9 +77,10 @@ class PlayState extends FlxState
     }
 
     public function enterSegment(segment:Segment) {
+        var previousSegment:Segment = currentSegment;
         currentSegment = segment;
 
-        // Move enemies away from player
+        // Move enemies in entered segment away from player
         FlxG.overlap(
             currentSegment, Enemy.all,
             function(_:FlxObject, _enemy:FlxObject) {
@@ -88,7 +89,7 @@ class PlayState extends FlxState
                     for(i in 0...100) {
                         if(FlxMath.distanceBetween(player, enemy) < min) {
                             enemy.resetPosition(
-                                segment.getEnemyLocation(
+                                currentSegment.getEnemyLocation(
                                     enemy.startsOnGround()
                                 )
                             );
@@ -100,6 +101,23 @@ class PlayState extends FlxState
                 }
             }
         );
+
+        // Activate enemies in new segment, deactivate and reset in old
+        // TODO: Hide this "reset" from the player;
+        // currently it's visible for a split second. Could defer resetting
+        // by setting a "should reset" variable on the enemy, perhaps..?
+        for(_enemy in Enemy.all) {
+            var enemy = cast(_enemy, Enemy);
+            var inPreviousSegment = FlxG.overlap(enemy, previousSegment);
+            var inCurrentSegment = FlxG.overlap(enemy, currentSegment);
+            if(inCurrentSegment) {
+                enemy.isActive = true;
+            }
+            else if(inPreviousSegment) {
+                enemy.resetPosition();
+                enemy.isActive = false;
+            }
+        }
     }
 
     override public function update(elapsed:Float):Void
@@ -131,16 +149,6 @@ class PlayState extends FlxState
         }
         FlxG.collide(Enemy.all, Enemy.all);
         FlxG.collide(Enemy.all, Segment.all);
-        for(_enemy in Enemy.all) {
-            var enemy = cast(_enemy, Enemy);
-            var isActive = FlxG.overlap(enemy, currentSegment);
-            if(enemy.isActive != isActive) {
-                if(!isActive) {
-                    enemy.resetPosition();
-                }
-                enemy.isActive = isActive;
-            }
-        }
 
         // Destroy enemies stuck in walls
         for (enemy in Enemy.all) {
