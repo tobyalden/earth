@@ -10,7 +10,7 @@ import flixel.math.*;
 
 class PlayState extends FlxState
 {
-    public static inline var MAX_LEVEL_INDEX = 11;
+    public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
     public static inline var NUMBER_OF_ENEMIES = 45;
 
@@ -27,6 +27,7 @@ class PlayState extends FlxState
 
         var rand = FlxG.random.int(0, MAX_LEVEL_INDEX);
         var levelPath = 'assets/data/levels/' + rand + '.png';
+        trace('level ' + rand);
         level = new Level(levelPath);
         level.generate();
         FlxG.worldBounds.set(

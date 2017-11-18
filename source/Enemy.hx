@@ -37,11 +37,14 @@ class Enemy extends FlxSprite
             movement();
         }
         else {
-            velocity = new FlxPoint(0, 0);
-            acceleration = new FlxPoint(0, 0);
-            if(!canFly) {
-                velocity.y += Player.GRAVITY;
+            velocity.x = 0;
+            if(canFly) {
+                velocity.y = 0;
             }
+            else {
+                velocity.y = Math.max(0, velocity.y);
+            }
+            acceleration = new FlxPoint(0, 0);
             // TODO: Don't reset position if enemies go offscreen by
             // themselves - only if the player goes offscreen!
         }
