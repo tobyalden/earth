@@ -211,4 +211,8 @@ class Player extends FlxSprite
         y = lastCheckpoint.y;
         revive();
     }
+
+    public function isSecret() {
+        return false;
+    }
 }

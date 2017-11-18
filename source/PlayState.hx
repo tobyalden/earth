@@ -13,7 +13,9 @@ class PlayState extends FlxState
     private var level:Level;
     private var currentSegment:Segment;
     private var player:Player;
-    //private var option:Option;
+
+    private var secretPlayer:SecretPlayer;
+    private var option:Option;
 
     override public function create():Void
     {
@@ -40,10 +42,17 @@ class PlayState extends FlxState
             Std.int(entrance.x + entrance.width/2 - 2),
             Std.int(entrance.y + 3 * Level.TILE_SIZE)
         );
-        //option = new Option(player);
         add(player);
-        //add(player.getSword());
-        //add(option);
+        if(player.isSecret()) {
+            secretPlayer = cast(player, SecretPlayer);
+            add(secretPlayer.getSword());
+            option = new Option(secretPlayer);
+            add(option);
+        }
+        else {
+            secretPlayer = null;
+            option = null;
+        }
 
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
@@ -146,20 +155,22 @@ class PlayState extends FlxState
             }
         );
 
-        //FlxG.overlap(
-            //player.getSword(), Enemy.all,
-            //function(sword:FlxObject, enemy:FlxObject) {
-                //if(sword.visible) {
-                    //cast(enemy, Enemy).takeHit(Player.SLASH_DAMAGE);
-                    //if(player.x < enemy.x) {
-                        //player.pushBack(FlxObject.LEFT);
-                    //}
-                    //else {
-                        //player.pushBack(FlxObject.RIGHT);
-                    //}
-                //}
-            //}
-        //);
+        if(player.isSecret()) {
+            FlxG.overlap(
+                secretPlayer.getSword(), Enemy.all,
+                function(sword:FlxObject, enemy:FlxObject) {
+                    if(sword.visible) {
+                        cast(enemy, Enemy).takeHit(SecretPlayer.SLASH_DAMAGE);
+                        if(player.x < enemy.x) {
+                            player.pushBack(FlxObject.LEFT);
+                        }
+                        else {
+                            player.pushBack(FlxObject.RIGHT);
+                        }
+                    }
+                }
+            );
+        }
 
         FlxG.overlap(
             player, Enemy.all,

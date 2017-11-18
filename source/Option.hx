@@ -14,11 +14,11 @@ class Option extends FlxSprite
 
     public static inline var SHOT_COOLDOWN = 0.25;
 
-    private var player:Player;
+    private var player:SecretPlayer;
     private var destination:FlxPoint;
     private var shootTimer:FlxTimer;
 
-    public function new(player:Player)
+    public function new(player:SecretPlayer)
     {
         super(player.x, player.y);
         loadGraphic('assets/images/option.png');
