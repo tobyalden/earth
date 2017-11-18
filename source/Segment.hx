@@ -50,7 +50,7 @@ class Segment extends FlxTilemap
         }
         var yOffset = 0;
         if(onGround && getTile(location.x, location.y - 1) == 0) {
-            yOffset = 4;
+            yOffset = 8;
         }
 
         return new FlxPoint(

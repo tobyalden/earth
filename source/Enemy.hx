@@ -9,6 +9,7 @@ import flixel.util.*;
 
 class Enemy extends FlxSprite
 {
+    public static inline var ACTIVE_RADIUS = 150;
     static public var all:FlxGroup = new FlxGroup();
 
     public var isActive:Bool;
@@ -38,6 +39,9 @@ class Enemy extends FlxSprite
         else {
             velocity = new FlxPoint(0, 0);
             acceleration = new FlxPoint(0, 0);
+            if(!canFly) {
+                velocity.y += Player.GRAVITY;
+            }
             // TODO: Don't reset position if enemies go offscreen by
             // themselves - only if the player goes offscreen!
         }

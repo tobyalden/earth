@@ -10,7 +10,7 @@ class Bullet extends FlxSprite
 {
     public static inline var SIZE = 4;
     public static inline var GRAVITY = 3;
-    //private var hitSfx:FlxSound;
+    private var hitSfx:FlxSound;
 
     public static var all:FlxGroup = new FlxGroup();
 
@@ -20,8 +20,8 @@ class Bullet extends FlxSprite
         this.velocity = velocity;
         makeGraphic(SIZE, SIZE, FlxColor.WHITE);
         all.add(this);
-        //hitSfx = FlxG.sound.load('assets/sounds/hit.wav');
-        //hitSfx.volume = 0.33;
+        hitSfx = FlxG.sound.load('assets/sounds/hit.wav');
+        hitSfx.volume = 0.33;
     }
 
     override public function update(elapsed:Float)

@@ -6,6 +6,7 @@ import flixel.math.*;
 
 
 // TODO: Set enemies starting position to rooms they move into
+// TODO: Fix bug where sometimes rooms aren't sealed properly
 
 class PlayState extends FlxState
 {
@@ -110,10 +111,7 @@ class PlayState extends FlxState
             var enemy = cast(_enemy, Enemy);
             var inPreviousSegment = FlxG.overlap(enemy, previousSegment);
             var inCurrentSegment = FlxG.overlap(enemy, currentSegment);
-            if(inCurrentSegment) {
-                enemy.isActive = true;
-            }
-            else if(inPreviousSegment) {
+            if(inPreviousSegment) {
                 enemy.resetPosition();
                 enemy.isActive = false;
             }
@@ -133,7 +131,6 @@ class PlayState extends FlxState
             ) {
 
                 enterSegment(segment);
-                return;
             }
         }
 
@@ -150,13 +147,22 @@ class PlayState extends FlxState
         FlxG.collide(Enemy.all, Enemy.all);
         FlxG.collide(Enemy.all, Segment.all);
 
-        // Destroy enemies stuck in walls
-        for (enemy in Enemy.all) {
+        for (_enemy in Enemy.all) {
+            // Activate enemies close to the player
+            var enemy = cast(_enemy, Enemy);
+            if(
+                FlxG.overlap(currentSegment, enemy)
+                && FlxMath.distanceBetween(enemy, player) < Enemy.ACTIVE_RADIUS
+            ) {
+                enemy.isActive = true;
+            }
+            // Destroy enemies stuck in walls
             if(currentSegment.overlaps(enemy)) {
-                cast(enemy, Enemy).killQuietly();
+                enemy.killQuietly();
             }
         }
-        for (bullet in Bullet.all) {
+
+        for(bullet in Bullet.all) {
             // Destroy bullets that collide with the current segment's tilemap
             if(currentSegment.overlaps(bullet)) {
                 bullet.destroy();

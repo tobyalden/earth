@@ -69,11 +69,14 @@ class Player extends FlxSprite
         isLookingDown = false;
 
         runSfx = FlxG.sound.load('assets/sounds/runloop.wav');
+        runSfx.volume = 0.5;
+        runSfx.looped = true;
         deathSfx = FlxG.sound.load('assets/sounds/death.wav');
         jumpSfx = FlxG.sound.load('assets/sounds/jump.wav');
+        jumpSfx.volume = 0.5;
         landSfx = FlxG.sound.load('assets/sounds/land.wav');
+        landSfx.volume = 0.55;
         shootSfx = FlxG.sound.load('assets/sounds/shoot.wav');
-        runSfx.looped = true;
 
         lastCheckpoint = new FlxPoint(x, y);
 
@@ -93,7 +96,7 @@ class Player extends FlxSprite
         isOnGround = isTouching(FlxObject.DOWN);
         isLookingUp = Controls.checkPressed('up');
         isLookingDown = Controls.checkPressed('down');
-        if(Controls.checkJustPressed('shoot')) {
+        if(Controls.checkPressed('shoot')) {
             shoot();
         }
         move();
