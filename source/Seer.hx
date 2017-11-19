@@ -13,6 +13,7 @@ class Seer extends Enemy
     private var myFacing:String;
     private var shootTimer:FlxTimer;
     private var shootSfx:FlxSound;
+    private var shotSpeed:Int;
 
     public function new(x:Int, y:Int, player:Player) {
         super(x, y, player);
@@ -26,6 +27,7 @@ class Seer extends Enemy
         shootTimer.start(1, shoot, 0);
         shootSfx = FlxG.sound.load('assets/sounds/enemyshoot.ogg');
         shootSfx.volume = 0.24;
+        shotSpeed = SHOT_SPEED;
     }
 
     override public function movement() {
@@ -47,19 +49,19 @@ class Seer extends Enemy
             || FlxAngle.angleBetween(this, player, true) > 120
         ) {
             myFacing = 'left';
-            bulletVelocity.x = -SHOT_SPEED;
+            bulletVelocity.x = -shotSpeed;
         }
         else if(FlxAngle.angleBetween(this, player, true) < -60) {
             myFacing = 'up';
-            bulletVelocity.y = -SHOT_SPEED;
+            bulletVelocity.y = -shotSpeed;
         }
         else if(FlxAngle.angleBetween(this, player, true) < 60) {
             myFacing = 'right';
-            bulletVelocity.x = SHOT_SPEED;
+            bulletVelocity.x = shotSpeed;
         }
         else if(FlxAngle.angleBetween(this, player, true) < 120) {
             myFacing = 'down';
-            bulletVelocity.y = SHOT_SPEED;
+            bulletVelocity.y = shotSpeed;
         }
         var bullet = new EnemyBullet(
             Std.int(x + 8), Std.int(y + 8), bulletVelocity
