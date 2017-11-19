@@ -12,7 +12,7 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 1;
+    public static inline var NUMBER_OF_ENEMIES = 10;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -62,18 +62,22 @@ class PlayState extends FlxState
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemy:Enemy;
-            if(new FlxRandom().bool()) {
-                var location = level.getEnemyLocation(true);
-                enemy = new Jumper(
-                    Std.int(location.x), Std.int(location.y), player
-                );
-            }
-            else {
-                var location = level.getEnemyLocation(false);
-                enemy = new Parasite(
-                    Std.int(location.x), Std.int(location.y), player
-                );
-            }
+            //if(new FlxRandom().bool()) {
+                //var location = level.getEnemyLocation(true);
+                //enemy = new Jumper(
+                    //Std.int(location.x), Std.int(location.y), player
+                //);
+            //}
+            //else {
+                //var location = level.getEnemyLocation(false);
+                //enemy = new Parasite(
+                    //Std.int(location.x), Std.int(location.y), player
+                //);
+            //}
+            var location = level.getEnemyLocation(false);
+            enemy = new Seer(
+                Std.int(location.x), Std.int(location.y), player
+            );
             add(enemy);
         }
     }
@@ -172,6 +176,17 @@ class PlayState extends FlxState
             }
         }
 
+        for(bullet in EnemyBullet.all) {
+            // Destroy bullets that collide with the current segment's tilemap
+            if(currentSegment.overlaps(bullet)) {
+                bullet.destroy();
+            }
+            // Destroy bullets outside the current segment
+            if(!FlxG.overlap(bullet, currentSegment)) {
+                cast(bullet, EnemyBullet).destroyQuietly();
+            }
+        }
+
         FlxG.overlap(
             Bullet.all, Enemy.all,
             function(bullet:FlxObject, enemy:FlxObject) {
@@ -197,12 +212,14 @@ class PlayState extends FlxState
             );
         }
 
-        FlxG.overlap(
-            player, Enemy.all,
-            function(player:FlxObject, enemy:FlxObject) {
-                cast(player, Player).takeHit();
-            }
-        );
+        for(danger in [Enemy.all, EnemyBullet.all]) {
+            FlxG.overlap(
+                player, danger,
+                function(player:FlxObject, enemy:FlxObject) {
+                    cast(player, Player).takeHit();
+                }
+            );
+        }
 
         // Camera
         FlxG.camera.follow(player, LOCKON, 3);

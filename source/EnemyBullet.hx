@@ -6,7 +6,7 @@ import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
 
-class Bullet extends FlxSprite
+class EnemyBullet extends FlxSprite
 {
     public static inline var SIZE = 4;
     public static inline var GRAVITY = 3;
