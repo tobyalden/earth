@@ -38,7 +38,7 @@ class Seer extends Enemy
     }
 
     public function shoot(_:FlxTimer) {
-        if(!isActive) {
+        if(!isActive || !isOnScreen()) {
             return;
         }
         var bulletVelocity = new FlxPoint(0, 0);
