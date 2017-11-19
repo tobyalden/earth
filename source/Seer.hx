@@ -32,6 +32,11 @@ class Seer extends Enemy
         animation.play(myFacing);
     }
 
+    override public function kill() {
+        super.kill();
+        shootTimer.cancel();
+    }
+
     public function shoot(_:FlxTimer) {
         if(!isActive) {
             return;

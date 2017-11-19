@@ -75,7 +75,7 @@ class PlayState extends FlxState
                 //);
             //}
             var location = level.getEnemyLocation(false);
-            enemy = new Seer(
+            enemy = new Seeker(
                 Std.int(location.x), Std.int(location.y), player
             );
             add(enemy);
