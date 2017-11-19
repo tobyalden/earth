@@ -8,7 +8,7 @@ import flixel.system.*;
 import flixel.util.*;
 
 // TODO: Destroy all timers when an enemy is killed
-// TODO: Add Fleer, Predator, Flopper, Ghost
+// TODO: Add Predator, Flopper, Ghost
 
 class Enemy extends FlxSprite
 {
