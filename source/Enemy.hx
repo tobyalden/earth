@@ -7,6 +7,9 @@ import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
 
+// TODO: Destroy all timers when an enemy is killed
+// TODO: Add Fleer, Predator, Flopper, Ghost
+
 class Enemy extends FlxSprite
 {
     public static inline var ACTIVE_RADIUS = 150;
@@ -18,7 +21,6 @@ class Enemy extends FlxSprite
     private var startLocation:FlxPoint;
 
     public function new(x:Int, y:Int, player:Player) {
-        // TODO: Destroy all timers when an enemy is killed
         super(x, y);
         this.player = player;
         all.add(this);
