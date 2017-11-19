@@ -52,6 +52,9 @@ class Level extends FlxTilemap
                 }
             }
         }
+        for(segmentKey in segments.keys()) {
+            trace('building: ' + segmentKey + ': ' + segments[segmentKey]);
+        }
     }
 
     public function getEnemyLocation(onGround:Bool) {

@@ -12,7 +12,7 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 45;
+    public static inline var NUMBER_OF_ENEMIES = 1;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -79,6 +79,7 @@ class PlayState extends FlxState
     }
 
     public function enterSegment(segment:Segment) {
+        trace('entering segment: ' + segment);
         var previousSegment:Segment = currentSegment;
         currentSegment = segment;
 
