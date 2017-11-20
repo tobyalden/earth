@@ -7,7 +7,6 @@ import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
 
-// TODO: Add Ghost
 // TODO: Add sfx
 
 class Enemy extends FlxSprite
