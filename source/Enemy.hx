@@ -7,7 +7,6 @@ import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
 
-// TODO: Destroy all timers when an enemy is killed
 // TODO: Add Ghost
 // TODO: Add sfx
 
