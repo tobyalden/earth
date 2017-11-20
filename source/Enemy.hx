@@ -16,6 +16,7 @@ class Enemy extends FlxSprite
     static public var all:FlxGroup = new FlxGroup();
 
     public var isActive:Bool;
+    public var ghost:Bool;
     private var canFly:Bool;
     private var player:Player;
     private var startLocation:FlxPoint;
@@ -29,6 +30,7 @@ class Enemy extends FlxSprite
         isActive = false;
         startLocation = new FlxPoint(x, y);
         placement = FlxObject.NONE;
+        ghost = false;
     }
 
     public function movement() {
@@ -83,5 +85,9 @@ class Enemy extends FlxSprite
 
     public function getPlacement() {
         return placement;
+    }
+
+    public function isGhost() {
+        return ghost;
     }
 }

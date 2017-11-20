@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.group.*;
 import flixel.input.keyboard.*;
 import flixel.math.*;
 
@@ -11,7 +12,7 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 35;
+    public static inline var NUMBER_OF_ENEMIES = 100;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -61,24 +62,23 @@ class PlayState extends FlxState
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemy:Enemy;
-            //if(new FlxRandom().bool()) {
-                //var location = level.getEnemyLocation(true);
-                //enemy = new Jumper(
-                    //Std.int(location.x), Std.int(location.y), player
-                //);
-            //}
-            //else {
-                //var location = level.getEnemyLocation(false);
-                //enemy = new Parasite(
-                    //Std.int(location.x), Std.int(location.y), player
-                //);
-            //}
-            var location = level.getEnemyLocation(FlxObject.CEILING);
-            enemy = new Flopper(
+            var location = level.getEnemyLocation(FlxObject.NONE);
+            enemy = new Parasite(
                 Std.int(location.x), Std.int(location.y), player
             );
             add(enemy);
         }
+    }
+
+    public function getNotGhosts() {
+        var notGhosts = new FlxGroup();
+        for(_enemy in Enemy.all) {
+            var enemy = cast(_enemy, Enemy);
+            if(!enemy.isGhost()) {
+                notGhosts.add(enemy);
+            }
+        }
+        return notGhosts;
     }
 
     public function enterSegment(segment:Segment) {
@@ -146,8 +146,8 @@ class PlayState extends FlxState
         if(option != null) {
             FlxG.collide(option, Segment.all);
         }
-        FlxG.collide(Enemy.all, Enemy.all);
-        FlxG.collide(Enemy.all, Segment.all);
+        FlxG.collide(getNotGhosts(), Enemy.all);
+        FlxG.collide(getNotGhosts(), Segment.all);
 
         for (_enemy in Enemy.all) {
             // Activate enemies close to the player
@@ -159,9 +159,9 @@ class PlayState extends FlxState
                 enemy.isActive = true;
             }
             // Destroy enemies stuck in walls
-            if(currentSegment.overlaps(enemy)) {
-                enemy.killQuietly();
-            }
+            //if(currentSegment.overlaps(enemy)) {
+                //enemy.killQuietly();
+            //}
         }
 
         for(bullet in Bullet.all) {
