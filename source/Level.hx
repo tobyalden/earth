@@ -34,6 +34,14 @@ class Level extends FlxTilemap
         loadMapFromGraphic(path, false, 1, 'assets/images/tiles.png');
     }
 
+    public function countSegments() {
+        var count = 0;
+        for(value in segments) {
+            count++;
+        }
+        return count;
+    }
+
     public function generate() {
         // Add special segments
         makeEntrance();
@@ -45,15 +53,16 @@ class Level extends FlxTilemap
         makeSegment(2, 2);
 
         // Fill remaining spaces with 1x1 segments
-        for (segmentX in 0...widthInTiles) {
-            for (segmentY in 0...heightInTiles) {
-                if(!hasSegment(segmentX, segmentY)) {
-                    makeSegment(1, 1);
-                }
-            }
+        for(i in 0...(getTileInstances(1).length - countSegments())) {
+            makeSegment(1, 1);
         }
         for(segmentKey in segments.keys()) {
             trace('building: ' + segmentKey + ': ' + segments[segmentKey]);
+        }
+
+        // Check that there are no holes
+        if(countSegments() < getTileInstances(1).length) {
+            trace('---------------------- THIS MAP HAS A HOLE!!!');
         }
     }
 
