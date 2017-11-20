@@ -37,20 +37,38 @@ class Segment extends FlxTilemap
         return randomOpenPosition;
     }
 
-    public function getEnemyLocation(onGround:Bool) {
+    public function getEnemyLocation(placement:Int) {
         var location = getRandomOpenPosition();
-        if(onGround) {
+        if(placement == FlxObject.FLOOR) {
             while(getTile(location.x, location.y + 1) == 0) {
                 location.y += 1;
                 // Restart if we hit the bottom of the map
                 if(location.y >= heightInTiles - 2) {
-                    return getEnemyLocation(true);
+                    return getEnemyLocation(FlxObject.FLOOR);
+                }
+            }
+        }
+        else if(placement == FlxObject.CEILING) {
+            while(getTile(location.x, location.y - 1) == 0) {
+                location.y -= 1;
+                // Restart if we hit the top of the map
+                if(location.y <= 1) {
+                    return getEnemyLocation(FlxObject.CEILING);
                 }
             }
         }
         var yOffset = 0;
-        if(onGround && getTile(location.x, location.y - 1) == 0) {
+        if(
+            placement == FlxObject.FLOOR
+            && getTile(location.x, location.y - 1) == 0
+        ) {
             yOffset = 8;
+        }
+        else if(
+            placement == FlxObject.CEILING
+            && getTile(location.x, location.y + 1) == 0
+        ) {
+            yOffset = -8;
         }
 
         return new FlxPoint(

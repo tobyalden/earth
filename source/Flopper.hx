@@ -8,7 +8,7 @@ import flixel.util.*;
 class Flopper extends Enemy
 {
     public static inline var JUMP_POWER_X = 60;
-    public static inline var JUMP_POWER_Y = 160;
+    public static inline var JUMP_POWER_Y = 200;
     public static inline var TIME_BETWEEN_JUMPS = 2;
 
     private var isOnCeiling:Bool;
@@ -24,6 +24,7 @@ class Flopper extends Enemy
         jumpCooldown.start(TIME_BETWEEN_JUMPS, jump, 0);
         isOnCeiling = false;
         health = 4;
+        placement = FlxObject.CEILING;
     }
 
     override public function update(elapsed:Float)

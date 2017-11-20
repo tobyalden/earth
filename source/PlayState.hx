@@ -5,14 +5,13 @@ import flixel.input.keyboard.*;
 import flixel.math.*;
 
 
-// TODO: Set enemies starting position to rooms they move into
 // TODO: Fix bug where sometimes rooms aren't sealed properly
 
 class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 10;
+    public static inline var NUMBER_OF_ENEMIES = 35;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -74,8 +73,8 @@ class PlayState extends FlxState
                     //Std.int(location.x), Std.int(location.y), player
                 //);
             //}
-            var location = level.getEnemyLocation(false);
-            enemy = new Fleer(
+            var location = level.getEnemyLocation(FlxObject.CEILING);
+            enemy = new Flopper(
                 Std.int(location.x), Std.int(location.y), player
             );
             add(enemy);
@@ -97,7 +96,7 @@ class PlayState extends FlxState
                         if(FlxMath.distanceBetween(player, enemy) < min) {
                             enemy.resetPosition(
                                 currentSegment.getEnemyLocation(
-                                    enemy.startsOnGround()
+                                    enemy.getPlacement()
                                 )
                             );
                         }

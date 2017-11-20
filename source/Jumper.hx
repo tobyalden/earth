@@ -24,6 +24,7 @@ class Jumper extends Enemy
         jumpCooldown.start(TIME_BETWEEN_JUMPS, jump, 0);
         isOnGround = false;
         health = 1;
+        placement = FlxObject.FLOOR;
     }
 
     override public function update(elapsed:Float)

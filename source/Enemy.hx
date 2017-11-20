@@ -8,7 +8,8 @@ import flixel.system.*;
 import flixel.util.*;
 
 // TODO: Destroy all timers when an enemy is killed
-// TODO: Add Predator, Flopper, Ghost
+// TODO: Add Ghost
+// TODO: Add sfx
 
 class Enemy extends FlxSprite
 {
@@ -19,6 +20,7 @@ class Enemy extends FlxSprite
     private var canFly:Bool;
     private var player:Player;
     private var startLocation:FlxPoint;
+    private var placement:Int;
 
     public function new(x:Int, y:Int, player:Player) {
         super(x, y);
@@ -27,6 +29,7 @@ class Enemy extends FlxSprite
         canFly = false;
         isActive = false;
         startLocation = new FlxPoint(x, y);
+        placement = FlxObject.NONE;
     }
 
     public function movement() {
@@ -79,7 +82,7 @@ class Enemy extends FlxSprite
         setPosition(startLocation.x, startLocation.y);
     }
 
-    public function startsOnGround() {
-        return !canFly;
+    public function getPlacement() {
+        return placement;
     }
 }

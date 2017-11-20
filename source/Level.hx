@@ -57,9 +57,9 @@ class Level extends FlxTilemap
         }
     }
 
-    public function getEnemyLocation(onGround:Bool) {
+    public function getEnemyLocation(placement:Int) {
         var segment = getRandomSegment();
-        return segment.getEnemyLocation(onGround);
+        return segment.getEnemyLocation(placement);
     }
 
     private function sealSegments(
