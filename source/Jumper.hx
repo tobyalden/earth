@@ -28,7 +28,9 @@ class Jumper extends Enemy
 
     override public function update(elapsed:Float)
     {
-        isOnGround = isTouching(FlxObject.DOWN);
+        if(justTouched(FlxObject.FLOOR)) {
+            isOnGround = true;
+        }
         if(isOnGround) {
             velocity.x = 0;
             velocity.y = 0;
@@ -46,10 +48,10 @@ class Jumper extends Enemy
     }
 
     private function jump(_:FlxTimer) {
-        if(!isActive) {
+        if(!isActive || !isOnGround) {
             return;
         }
-        y -= 1;
+        isOnGround = false;
         velocity.y = -JUMP_POWER_Y;
         if (x < player.x) {
             velocity.x = JUMP_POWER_X;

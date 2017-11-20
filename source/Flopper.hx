@@ -28,7 +28,9 @@ class Flopper extends Enemy
 
     override public function update(elapsed:Float)
     {
-        isOnCeiling = isTouching(FlxObject.UP);
+        if(justTouched(FlxObject.UP)) {
+            isOnCeiling = true;
+        }
         if(isOnCeiling) {
             velocity.x = 0;
             velocity.y = 0;
@@ -46,10 +48,10 @@ class Flopper extends Enemy
     }
 
     private function jump(_:FlxTimer) {
-        if(!isActive) {
+        if(!isActive || !isOnCeiling) {
             return;
         }
-        y += 1;
+        isOnCeiling = false;
         velocity.y = JUMP_POWER_Y;
         if (x < player.x) {
             velocity.x = JUMP_POWER_X;
