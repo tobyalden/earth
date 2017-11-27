@@ -10,6 +10,7 @@ class Segment extends FlxTilemap
     public static var all:FlxGroup = new FlxGroup();
 
     public var special:Bool;
+    public var decorativeTiles:FlxTilemap;
 
     public function new(path:String, special:Bool=false)
     {
@@ -28,6 +29,29 @@ class Segment extends FlxTilemap
             y: rand.int(1, heightInTiles - 2)
         }
     }
+
+    public function getDecorativeTiles() {
+        decorativeTiles = new FlxTilemap();
+        decorativeTiles.x = x;
+        decorativeTiles.y = y;
+        var data = getData().copy();
+        var index = 0;
+        for(tile in data) {
+            if(tile >= 1) {
+                data[index] = index;
+            }
+            else {
+                data[index] = -1;
+            }
+            index++;
+        }
+        decorativeTiles.loadMapFromArray(
+            data, widthInTiles, heightInTiles, 'assets/images/stone.png',
+            16, 16, 0, 0
+        );
+        return decorativeTiles;
+    }
+
 
     public function getRandomOpenPosition() {
         var randomOpenPosition = getRandomPosition();

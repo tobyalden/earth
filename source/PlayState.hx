@@ -34,7 +34,13 @@ class PlayState extends FlxState
             level.heightInTiles * FlxG.height
         );
 
+
         for(segment in level.segments) {
+            add(segment.getDecorativeTiles());
+        }
+        for(segment in level.segments) {
+            segment.alpha = 0.80;
+            //segment.useScaleHack = false;
             add(segment);
         }
 
