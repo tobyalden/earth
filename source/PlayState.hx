@@ -35,6 +35,10 @@ class PlayState extends FlxState
         );
 
 
+        var backdrop = new FlxSprite(
+            0, 0, 'assets/images/background.png'
+        );
+        add(backdrop);
         for(segment in level.segments) {
             add(segment.getDecorativeTiles());
         }

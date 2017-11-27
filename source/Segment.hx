@@ -31,6 +31,9 @@ class Segment extends FlxTilemap
     }
 
     public function getDecorativeTiles() {
+        // TODO: Instead of loading the same small tilemap for each segment,
+        // use one large one for the entire level. this can be done, it just
+        // needs to select tiles a little more cleverly.
         decorativeTiles = new FlxTilemap();
         decorativeTiles.x = x;
         decorativeTiles.y = y;
