@@ -31,25 +31,25 @@ class Segment extends FlxTilemap
     }
 
     public function getDecorativeTiles() {
-        // TODO: Instead of loading the same small tilemap for each segment,
-        // use one large one for the entire level. this can be done, it just
-        // needs to select tiles a little more cleverly.
         decorativeTiles = new FlxTilemap();
         decorativeTiles.x = x;
         decorativeTiles.y = y;
-        var data = getData().copy();
-        var index = 0;
-        for(tile in data) {
-            if(tile >= 1) {
-                data[index] = index;
+        var data = getData(true);
+        for(tileX in 0...widthInTiles) {
+            for(tileY in 0...heightInTiles) {
+                var tileIndex = tileX + tileY * widthInTiles;
+                if(data[tileIndex] == 1) {
+                    data[tileIndex] = (
+                        Std.int(x / FlxG.width) * 16 + tileX + tileY * 100
+                    );
+                }
+                else {
+                    data[tileIndex] = -1;
+                }
             }
-            else {
-                data[index] = -1;
-            }
-            index++;
         }
         decorativeTiles.loadMapFromArray(
-            data, widthInTiles, heightInTiles, 'assets/images/stone.png',
+            data, widthInTiles, heightInTiles, 'assets/images/stonebig.png',
             16, 16, 0, 0
         );
         return decorativeTiles;
