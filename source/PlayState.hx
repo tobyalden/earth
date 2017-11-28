@@ -19,6 +19,8 @@ class PlayState extends FlxState
     private var secretPlayer:SecretPlayer;
     private var option:Option;
 
+    // TODO: Make it so the player can aim downwards while standing
+
     override public function create():Void
     {
         super.create();
@@ -36,7 +38,7 @@ class PlayState extends FlxState
 
 
         var backdrop = new FlxSprite(
-            0, 0, 'assets/images/background.png'
+            0, 0, 'assets/images/backgroundbig.png'
         );
         add(backdrop);
         for(segment in level.segments) {

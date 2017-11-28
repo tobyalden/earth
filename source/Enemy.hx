@@ -38,6 +38,7 @@ class Enemy extends FlxSprite
 
     override public function update(elapsed:Float)
     {
+        // TODO: Prevent flying enemies from leaving the screen they're on
         if(isActive) {
             movement();
         }
@@ -45,9 +46,6 @@ class Enemy extends FlxSprite
             velocity.x = 0;
             if(canFly) {
                 velocity.y = 0;
-            }
-            else {
-                velocity.y = Math.max(0, velocity.y);
             }
             acceleration = new FlxPoint(0, 0);
         }
