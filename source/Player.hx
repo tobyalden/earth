@@ -270,6 +270,11 @@ class Player extends FlxSprite
         new FlxTimer().start(2, respawn);
     }
 
+    public function freeze() {
+        active = false;
+        runSfx.stop();
+    }
+
     private function respawn(_:FlxTimer) {
         x = lastCheckpoint.x;
         y = lastCheckpoint.y;

@@ -4,6 +4,8 @@ import flixel.*;
 import flixel.group.*;
 import flixel.input.keyboard.*;
 import flixel.math.*;
+import flixel.system.*;
+import flixel.util.*;
 
 
 class PlayState extends FlxState
@@ -17,16 +19,23 @@ class PlayState extends FlxState
     private var player:Player;
 
     private var key:Key;
+    private var door:Door;
 
     private var secretPlayer:SecretPlayer;
     private var option:Option;
 
+    public var levelCompleteSfx:FlxSound;
+
     // TODO: Make it so the player can aim downwards while standing
     // TODO: Randomly flip levels horizontally
+    // TODO: Fix bug where jumpers fall on you when you spawn (i guess don't
+    // spawn them over segment exits...?)
 
     override public function create():Void
     {
         super.create();
+
+        levelCompleteSfx = FlxG.sound.load('assets/sounds/levelcomplete.ogg');
 
         var rand = FlxG.random.int(0, MAX_LEVEL_INDEX);
         var levelPath = 'assets/data/levels/' + rand + '.png';
@@ -53,13 +62,28 @@ class PlayState extends FlxState
             add(segment);
         }
 
-        // Add player & option
+        // Set special rooms
         var entrance = level.specialSegments.get('entrance');
         var keySegment = level.specialSegments.get('key');
+        var exit = level.specialSegments.get('exit');
         currentSegment = entrance;
+
+        // Add key and door
+        key = new Key(
+            Std.int(keySegment.x + keySegment.width/2 - Level.TILE_SIZE/2),
+            Std.int(keySegment.y + keySegment.height/2 - Level.TILE_SIZE*1.25)
+        );
+        add(key);
+        door = new Door(
+            Std.int(exit.x + exit.width/2 - Level.TILE_SIZE),
+            Std.int(exit.y + exit.height/2 - Level.TILE_SIZE/2)
+        );
+        add(door);
+
+        // Add player & option
         player = new Player(
-            Std.int(keySegment.x + keySegment.width/2 - 2) + 50,
-            Std.int(keySegment.y + 3 * Level.TILE_SIZE)
+            Std.int(entrance.x + entrance.width/2 - 2),
+            Std.int(entrance.y + 6 * Level.TILE_SIZE)
         );
         add(player);
         if(player.isSecret()) {
@@ -72,15 +96,6 @@ class PlayState extends FlxState
             secretPlayer = null;
             option = null;
         }
-
-        // Add key and exit
-        key = new Key(
-            Std.int(keySegment.x + keySegment.width/2 - Level.TILE_SIZE/2),
-            Std.int(keySegment.y + keySegment.height/2 - Level.TILE_SIZE*1.25)
-        );
-        add(key);
-
-        var exit = level.specialSegments.get('exit');
 
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
@@ -154,7 +169,7 @@ class PlayState extends FlxState
     {
         Controls.controller = FlxG.gamepads.getByID(0);
 
-        // Set current segment
+        // Enter segments
         for(_segment in Segment.all) {
             var segment = cast(_segment, Segment);
             if(
@@ -166,7 +181,7 @@ class PlayState extends FlxState
             }
         }
 
-        // Collisions
+        // Solid collisions
         FlxG.overlap(
             player, Segment.all,
             function(player:FlxObject, segment:FlxObject) {
@@ -179,8 +194,15 @@ class PlayState extends FlxState
         FlxG.collide(getNotGhosts(), Enemy.all);
         FlxG.collide(getNotGhosts(), Segment.all);
 
+        // Key & door
         FlxG.overlap(player, key, function(player:FlxObject, key:FlxObject) {
             key.kill();
+            door.open();
+        });
+        FlxG.overlap(player, door, function(player:FlxObject, door:FlxObject) {
+            if(cast(door, Door).isOpen()) {
+                goToNextLevel();
+            }
         });
 
 
@@ -221,6 +243,7 @@ class PlayState extends FlxState
             }
         }
 
+        // Damage enemies
         FlxG.overlap(
             Bullet.all, Enemy.all,
             function(bullet:FlxObject, enemy:FlxObject) {
@@ -246,6 +269,7 @@ class PlayState extends FlxState
             );
         }
 
+        // Damage player
         for(danger in [Enemy.all, EnemyBullet.all]) {
             FlxG.overlap(
                 player, danger,
@@ -267,6 +291,14 @@ class PlayState extends FlxState
             FlxG.switchState(new PlayState());
         }
         super.update(elapsed);
+    }
+
+    private function goToNextLevel() {
+        player.freeze();
+        levelCompleteSfx.play();
+        FlxG.camera.fade(FlxColor.BLACK, 2.5, false, function() {
+            FlxG.switchState(new PlayState());
+        });
     }
 
     override public function switchTo(nextState:FlxState):Bool
