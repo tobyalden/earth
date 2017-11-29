@@ -45,6 +45,8 @@ class Level extends FlxTilemap
     public function generate() {
         // Add special segments
         makeEntrance();
+        makeKeyRoom();
+        makeExit();
 
         // Add large segments
         makeSegment(2, 2);
@@ -121,6 +123,16 @@ class Level extends FlxTilemap
     public function makeEntrance() {
         var entrance = makeSegment(1, 1, 'default', true);
         specialSegments.set('entrance', entrance);
+    }
+
+    public function makeExit() {
+        var entrance = makeSegment(1, 1, 'default', true);
+        specialSegments.set('exit', entrance);
+    }
+
+    public function makeKeyRoom() {
+        var entrance = makeSegment(1, 1, 'default', true);
+        specialSegments.set('key', entrance);
     }
 
     private function getShuffledXIndices() {

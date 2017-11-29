@@ -16,6 +16,8 @@ class PlayState extends FlxState
     private var currentSegment:Segment;
     private var player:Player;
 
+    private var key:Key;
+
     private var secretPlayer:SecretPlayer;
     private var option:Option;
 
@@ -53,10 +55,11 @@ class PlayState extends FlxState
 
         // Add player & option
         var entrance = level.specialSegments.get('entrance');
+        var keySegment = level.specialSegments.get('key');
         currentSegment = entrance;
         player = new Player(
-            Std.int(entrance.x + entrance.width/2 - 2),
-            Std.int(entrance.y + 3 * Level.TILE_SIZE)
+            Std.int(keySegment.x + keySegment.width/2 - 2) + 50,
+            Std.int(keySegment.y + 3 * Level.TILE_SIZE)
         );
         add(player);
         if(player.isSecret()) {
@@ -69,6 +72,15 @@ class PlayState extends FlxState
             secretPlayer = null;
             option = null;
         }
+
+        // Add key and exit
+        key = new Key(
+            Std.int(keySegment.x + keySegment.width/2 - Level.TILE_SIZE/2),
+            Std.int(keySegment.y + keySegment.height/2 - Level.TILE_SIZE*1.25)
+        );
+        add(key);
+
+        var exit = level.specialSegments.get('exit');
 
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
@@ -166,6 +178,11 @@ class PlayState extends FlxState
         }
         FlxG.collide(getNotGhosts(), Enemy.all);
         FlxG.collide(getNotGhosts(), Segment.all);
+
+        FlxG.overlap(player, key, function(player:FlxObject, key:FlxObject) {
+            key.kill();
+        });
+
 
         for (_enemy in Enemy.all) {
             // Activate enemies close to the player
