@@ -7,8 +7,6 @@ import flixel.math.*;
 import flixel.system.*;
 import flixel.util.*;
 
-// TODO: Add sfx
-
 class Enemy extends FlxSprite
 {
     public static inline var ACTIVE_RADIUS = 150;

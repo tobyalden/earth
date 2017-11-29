@@ -10,7 +10,7 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 0;
+    public static inline var NUMBER_OF_ENEMIES = 20;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -20,6 +20,7 @@ class PlayState extends FlxState
     private var option:Option;
 
     // TODO: Make it so the player can aim downwards while standing
+    // TODO: Randomly flip levels horizontally
 
     override public function create():Void
     {
@@ -73,9 +74,16 @@ class PlayState extends FlxState
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemy:Enemy;
             var location = level.getEnemyLocation(FlxObject.NONE);
-            enemy = new Parasite(
-                Std.int(location.x), Std.int(location.y), player
-            );
+            if(new FlxRandom().bool()) {
+                enemy = new Parasite(
+                    Std.int(location.x), Std.int(location.y), player
+                );
+            }
+            else {
+                enemy = new Jumper(
+                    Std.int(location.x), Std.int(location.y), player
+                );
+            }
             add(enemy);
         }
     }
