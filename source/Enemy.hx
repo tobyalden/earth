@@ -21,6 +21,9 @@ class Enemy extends FlxSprite
     private var startLocation:FlxPoint;
     private var placement:Int;
 
+    private var hitSfx:FlxSound;
+    private var deathSfx:FlxSound;
+
     public function new(x:Int, y:Int, player:Player) {
         super(x, y);
         this.player = player;
@@ -30,6 +33,8 @@ class Enemy extends FlxSprite
         startLocation = new FlxPoint(x, y);
         placement = FlxObject.NONE;
         ghost = false;
+        hitSfx = FlxG.sound.load('assets/sounds/enemyhit.ogg');
+        deathSfx = FlxG.sound.load('assets/sounds/enemydeath.ogg');
     }
 
     public function movement() {
@@ -66,9 +71,11 @@ class Enemy extends FlxSprite
     public function takeHit(damage:Int) {
         health -= damage;
         if(health <= 0) {
+            deathSfx.play();
             kill();
         }
         else {
+            hitSfx.play();
             FlxFlicker.flicker(this, 0.25);
         }
     }
