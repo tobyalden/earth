@@ -55,6 +55,50 @@ class Segment extends FlxTilemap
         return decorativeTiles;
     }
 
+    public function getWater() {
+        for(tileY in 0...heightInTiles) {
+            for(tileX in 0...widthInTiles) {
+                if(
+                    getTile(tileX, tileY) == 0
+                    && getTile(tileX, tileY + 1) > 0
+                    && getTile(tileX - 1, tileY) > 0
+                ) {
+                    var canHoldWater = true;
+                    var tileCount = 1;
+                    for(stepX in (tileX + 1)...widthInTiles) {
+                        if(getTile(stepX, tileY) > 1) {
+                            break;
+                        }
+                        if(getTile(stepX, tileY + 1) == 0) {
+                            canHoldWater = false;
+                            break;
+                        }
+                        tileCount++;
+                    }
+                    if(canHoldWater) {
+                        var water = new Water(
+                            Std.int(x + tileX * Level.TILE_SIZE),
+                            Std.int(y + tileY * Level.TILE_SIZE),
+                            tileCount * Level.TILE_SIZE
+                        );
+                        trace(water);
+                        return water;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    override function getTile(tileX:Int, tileY:Int) {
+        if (
+            tileX < 0 || tileX >= widthInTiles
+            || tileY < 0 || tileY >= heightInTiles
+        ) {
+            return -1;
+        }
+        return super.getTile(tileX, tileY);
+    }
 
     public function getRandomOpenPosition() {
         var randomOpenPosition = getRandomPosition();

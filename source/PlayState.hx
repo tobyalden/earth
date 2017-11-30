@@ -114,6 +114,16 @@ class PlayState extends FlxState
             }
             add(enemy);
         }
+
+        // Add water
+        for(segment in level.segments) {
+            var water = segment.getWater();
+            if(water == null) {
+                continue;
+            }
+            water.alpha = 0.5;
+            add(water);
+        }
     }
 
     public function getNotGhosts() {
