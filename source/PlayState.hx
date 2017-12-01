@@ -13,6 +13,7 @@ class PlayState extends FlxState
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
     public static inline var NUMBER_OF_ENEMIES = 20;
+    public static inline var NUMBER_OF_TRAPS = 10;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -128,6 +129,16 @@ class PlayState extends FlxState
                 add(water);
             }
         }
+
+        // Add traps
+        for(i in 0...NUMBER_OF_TRAPS) {
+            var location = level.getEnemyLocation(FlxObject.FLOOR);
+            var trap = new Mine(
+                Std.int(location.x), Std.int(location.y), player
+            );
+            add(trap);
+        }
+
     }
 
     public function getNotGhosts() {
