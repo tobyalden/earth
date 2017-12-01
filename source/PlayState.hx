@@ -122,12 +122,11 @@ class PlayState extends FlxState
 
         // Add water
         for(segment in segments) {
-            var water = segment.getWater();
-            if(water == null) {
-                continue;
+            var waters = segment.getWater();
+            for(water in waters) {
+                water.alpha = 0.5;
+                add(water);
             }
-            water.alpha = 0.5;
-            add(water);
         }
     }
 

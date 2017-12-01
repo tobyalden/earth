@@ -56,6 +56,7 @@ class Segment extends FlxTilemap
     }
 
     public function getWater() {
+        var waters = new Array<Water>();
         for(tileY in 0...heightInTiles) {
             for(tileX in 0...widthInTiles) {
                 if(
@@ -81,13 +82,13 @@ class Segment extends FlxTilemap
                             Std.int(y + tileY * Level.TILE_SIZE),
                             tileCount * Level.TILE_SIZE
                         );
-                        trace(water);
-                        return water;
+                        waters.push(water);
+                        break;
                     }
                 }
             }
         }
-        return null;
+        return waters;
     }
 
     override function getTile(tileX:Int, tileY:Int) {
