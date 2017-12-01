@@ -55,10 +55,14 @@ class PlayState extends FlxState
             0, 0, 'assets/images/backgroundbig.png'
         );
         add(backdrop);
-        for(segment in level.segments) {
+        var segments = new Array<Segment>();
+        for (segment in Segment.all) {
+            segments.push(cast(segment, Segment));
+        }
+        for(segment in segments) {
             add(segment.getDecorativeTiles());
         }
-        for(segment in level.segments) {
+        for(segment in segments) {
             segment.alpha = 0.80;
             //segment.useScaleHack = false;
             add(segment);
@@ -117,7 +121,7 @@ class PlayState extends FlxState
         }
 
         // Add water
-        for(segment in level.segments) {
+        for(segment in segments) {
             var water = segment.getWater();
             if(water == null) {
                 continue;
