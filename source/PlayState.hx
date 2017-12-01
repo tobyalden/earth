@@ -285,11 +285,13 @@ class PlayState extends FlxState
         for(danger in [Enemy.all, EnemyBullet.all]) {
             FlxG.overlap(
                 player, danger,
-                function(player:FlxObject, enemy:FlxObject) {
-                    cast(player, Player).takeHit();
+                function(_:FlxObject, _:FlxObject) {
+                    player.takeHit();
                 }
             );
         }
+
+        player.isInWater = FlxG.overlap(player, Water.all);
 
         // Camera
         FlxG.camera.follow(player, LOCKON, 3);

@@ -26,6 +26,8 @@ class Player extends FlxSprite
     public static inline var BULLET_KICKBACK_UP = 260;
     public static inline var BULLET_KICKBACK_SIDE = 200;
 
+    public var isInWater:Bool;
+
     private var isOnGround:Bool;
     private var wasOnGround:FlxTimer;
     private var isLookingUp:Bool;
@@ -36,6 +38,10 @@ class Player extends FlxSprite
     private var jumpSfx:FlxSound;
     private var landSfx:FlxSound;
     private var shootSfx:FlxSound;
+
+    private var waterRunSfx:FlxSound;
+    private var waterJumpSfx:FlxSound;
+    private var waterLandSfx:FlxSound;
 
     private var lastCheckpoint:FlxPoint;
 
@@ -67,6 +73,7 @@ class Player extends FlxSprite
         wasOnGround = new FlxTimer();
         isLookingUp = false;
         isLookingDown = false;
+        isInWater = false;
 
         runSfx = FlxG.sound.load('assets/sounds/runloop.wav');
         runSfx.volume = 0.5;
@@ -78,6 +85,11 @@ class Player extends FlxSprite
         landSfx.volume = 0.55;
         shootSfx = FlxG.sound.load('assets/sounds/shoot.wav');
 
+        waterRunSfx = FlxG.sound.load('assets/sounds/waterrun.wav');
+        waterRunSfx.looped = true;
+        waterJumpSfx = FlxG.sound.load('assets/sounds/waterjump.wav');
+        waterLandSfx = FlxG.sound.load('assets/sounds/waterland.wav');
+
         lastCheckpoint = new FlxPoint(x, y);
 
         pushback = new FlxTimer();
@@ -88,7 +100,12 @@ class Player extends FlxSprite
     override public function update(elapsed:Float)
     {
         if(justTouched(FlxObject.FLOOR)) {
-            landSfx.play();
+            if(isInWater) {
+                waterLandSfx.play();
+            }
+            else {
+                landSfx.play();
+            }
         }
         if(!isTouching(FlxObject.DOWN) && isOnGround) {
             wasOnGround.start(JUMP_GRACE_PERIOD);
@@ -198,7 +215,12 @@ class Player extends FlxSprite
         if(Controls.checkJustPressed('jump')) {
             if(isOnGround || wasOnGround.active) {
                 velocity.y = -JUMP_POWER;
-                jumpSfx.play();
+                if(isInWater) {
+                    waterJumpSfx.play();
+                }
+                else {
+                    jumpSfx.play();
+                }
                 isOnGround = false;
                 wasOnGround.cancel();
             }
@@ -251,10 +273,18 @@ class Player extends FlxSprite
     private function sound()
     {
         if(animation.name == 'run') {
-            runSfx.play();
+            if(isInWater) {
+                waterRunSfx.play();
+                runSfx.stop();
+            }
+            else {
+                runSfx.play();
+                waterRunSfx.stop();
+            }
         }
         else {
             runSfx.stop();
+            waterRunSfx.stop();
         }
     }
 

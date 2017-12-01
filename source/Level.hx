@@ -23,6 +23,8 @@ class Level extends FlxTilemap
         '3x1' => 4
     ];
 
+    // TODO: Large segments get added to the map below multiple times,
+    // causing water to get overlaid 4 times (and prolly other bugs)
     public var segments:Map<String, Segment>;
     public var specialSegments:Map<String, Segment>;
 
