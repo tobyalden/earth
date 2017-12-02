@@ -31,7 +31,6 @@ class PlayState extends FlxState
     // TODO: Randomly flip levels horizontally
     // TODO: Fix bug where jumpers fall on you when you spawn (i guess don't
     // spawn them over segment exits...?)
-    // TODO: Spawning on ground seems to be broken, maybe in large rooms
     // TODO: Move sound effects into static variables
 
     override public function create():Void
@@ -107,13 +106,14 @@ class PlayState extends FlxState
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemy:Enemy;
-            var location = level.getEnemyLocation(FlxObject.NONE);
             if(new FlxRandom().bool()) {
+                var location = level.getEnemyLocation(FlxObject.NONE);
                 enemy = new Parasite(
                     Std.int(location.x), Std.int(location.y), player
                 );
             }
             else {
+                var location = level.getEnemyLocation(FlxObject.FLOOR);
                 enemy = new Jumper(
                     Std.int(location.x), Std.int(location.y), player
                 );
@@ -277,12 +277,6 @@ class PlayState extends FlxState
                 bullet.destroy();
             }
         );
-        FlxG.overlap(
-            TrapExplosion.all, Enemy.all,
-            function(_:FlxObject, enemy:FlxObject) {
-                cast(enemy, Enemy).takeHit(TrapExplosion.DAMAGE);
-            }
-        );
 
         if(player.isSecret()) {
             FlxG.overlap(
@@ -310,6 +304,20 @@ class PlayState extends FlxState
                 }
             );
         }
+
+        // Handle traps
+        FlxG.overlap(
+            TrapExplosion.all, Enemy.all,
+            function(_:FlxObject, enemy:FlxObject) {
+                cast(enemy, Enemy).takeHit(TrapExplosion.DAMAGE);
+            }
+        );
+        FlxG.overlap(
+            TrapExplosion.all, Mine.all,
+            function(_:FlxObject, mine:FlxObject) {
+                cast(mine, Mine).explode();
+            }
+        );
 
         player.isInWater = FlxG.overlap(player, Water.all);
 

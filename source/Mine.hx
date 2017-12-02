@@ -67,7 +67,7 @@ class Mine extends FlxSprite
         });
     }
 
-    private function explode() {
+    public function explode() {
         FlxG.state.add(new TrapExplosion(this));
         explodeSfx.play();
         kill();
