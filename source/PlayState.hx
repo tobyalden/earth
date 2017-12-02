@@ -277,6 +277,12 @@ class PlayState extends FlxState
                 bullet.destroy();
             }
         );
+        FlxG.overlap(
+            TrapExplosion.all, Enemy.all,
+            function(_:FlxObject, enemy:FlxObject) {
+                cast(enemy, Enemy).takeHit(TrapExplosion.DAMAGE);
+            }
+        );
 
         if(player.isSecret()) {
             FlxG.overlap(
@@ -296,7 +302,7 @@ class PlayState extends FlxState
         }
 
         // Damage player
-        for(danger in [Enemy.all, EnemyBullet.all]) {
+        for(danger in [Enemy.all, EnemyBullet.all, TrapExplosion.all]) {
             FlxG.overlap(
                 player, danger,
                 function(_:FlxObject, _:FlxObject) {
