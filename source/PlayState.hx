@@ -29,9 +29,8 @@ class PlayState extends FlxState
 
     // TODO: Make it so the player can aim downwards while standing
     // TODO: Randomly flip levels horizontally
-    // TODO: Fix bug where jumpers fall on you when you spawn (i guess don't
-    // spawn them over segment exits...?)
     // TODO: Move sound effects into static variables
+    // TODO: Fix bug where enemies disappear when you reenter a segment
 
     override public function create():Void
     {
