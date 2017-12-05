@@ -106,18 +106,14 @@ class PlayState extends FlxState
         // Add enemies
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemy:Enemy;
-            if(new FlxRandom().bool()) {
-                var location = level.getEnemyLocation(FlxObject.NONE);
-                enemy = new Parasite(
-                    Std.int(location.x), Std.int(location.y), player
-                );
-            }
-            else {
-                var location = level.getEnemyLocation(FlxObject.FLOOR);
-                enemy = new Jumper(
-                    Std.int(location.x), Std.int(location.y), player
-                );
-            }
+            //if(new FlxRandom().bool()) {
+                //enemy = new Parasite(0, 0, player);
+            //}
+            //else {
+                enemy = new Guardian(0, 0, player);
+            //}
+            var location = level.getEnemyLocation(enemy.getPlacement());
+            enemy.setPosition(Std.int(location.x), Std.int(location.y));
             add(enemy);
         }
 

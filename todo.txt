@@ -9,3 +9,4 @@
 - add second character
 - vary enemy spawns per level
 - add floor indicators
+- add more segments & levels
