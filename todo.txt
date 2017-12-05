@@ -1,0 +1,11 @@
+- add boss
+- add ending
+- add more backgrounds
+- add more enemies
+- add grass
+- add music
+- add title screen
+- add secrets/treats
+- add second character
+- vary enemy spawns per level
+- add floor indicators
