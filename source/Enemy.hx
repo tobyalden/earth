@@ -66,6 +66,14 @@ class Enemy extends FlxSprite
         super.kill();
     }
 
+    public function activate() {
+        isActive = true;
+    }
+
+    public function deactivate() {
+        isActive = false;
+    }
+
     public function takeHit(damage:Int) {
         health -= damage;
         if(health <= 0) {

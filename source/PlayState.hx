@@ -112,7 +112,7 @@ class PlayState extends FlxState
                 enemy = new Guardian(0, 0, player);
             //}
             var location = level.getEnemyLocation(enemy.getPlacement());
-            enemy.setPosition(Std.int(location.x), Std.int(location.y));
+            enemy.setPosition(Std.int(location.x), Std.int(location.y + 8));
             add(enemy);
         }
 
@@ -181,7 +181,7 @@ class PlayState extends FlxState
             var inCurrentSegment = FlxG.overlap(enemy, currentSegment);
             if(inPreviousSegment) {
                 enemy.resetPosition();
-                enemy.isActive = false;
+                enemy.deactivate();
             }
         }
     }
@@ -234,7 +234,7 @@ class PlayState extends FlxState
                 FlxG.overlap(currentSegment, enemy)
                 && FlxMath.distanceBetween(enemy, player) < Enemy.ACTIVE_RADIUS
             ) {
-                enemy.isActive = true;
+                enemy.activate();
             }
             // Destroy enemies stuck in walls
             if(currentSegment.overlaps(enemy) && !enemy.isGhost()) {
