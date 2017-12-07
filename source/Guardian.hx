@@ -38,7 +38,7 @@ class Guardian extends Enemy
     override public function update(elapsed:Float)
     {
         if(!isActive) {
-            animation.play('blue');
+            animation.play('off');
         }
         if(shootTimer.progress > 0.80) {
             if(animation.name == 'green') {
