@@ -40,7 +40,7 @@ class Guardian extends Enemy
         if(!isActive) {
             animation.play('off');
         }
-        if(shootTimer.progress > 0.80) {
+        else if(shootTimer.progress > 0.80) {
             if(animation.name == 'green') {
                 setTarget();
                 lockOnSfx.play();
