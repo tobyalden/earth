@@ -12,7 +12,7 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 20;
+    public static inline var NUMBER_OF_ENEMIES = 10;
     public static inline var NUMBER_OF_TRAPS = 10;
 
     private var level:Level;
@@ -30,7 +30,7 @@ class PlayState extends FlxState
     // TODO: Make it so the player can aim downwards while standing
     // TODO: Randomly flip levels horizontally
     // TODO: Move sound effects into static variables
-    // TODO: Fix bug where enemies disappear when you reenter a segment
+    // TODO: Fix bug where enemies with downward velocity spawn through the floor
 
     override public function create():Void
     {

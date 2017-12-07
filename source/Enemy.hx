@@ -28,7 +28,6 @@ class Enemy extends FlxSprite
         all.add(this);
         canFly = false;
         isActive = false;
-        startLocation = new FlxPoint(x, y);
         placement = FlxObject.NONE;
         ghost = false;
         hitSfx = FlxG.sound.load('assets/sounds/enemyhit.ogg');
@@ -37,6 +36,11 @@ class Enemy extends FlxSprite
 
     public function movement() {
         // Overridden in child classes
+    }
+
+    override public function setPosition(newX:Float = 0, newY:Float = 0):Void {
+        super.setPosition(newX, newY);
+        startLocation = new FlxPoint(x, y);
     }
 
     override public function update(elapsed:Float)
