@@ -3,22 +3,29 @@ package;
 import flixel.*;
 import flixel.group.*;
 import flixel.math.*;
+import flixel.system.*;
 import flixel.util.*;
 
 class Guardian extends Enemy
 {
     public static inline var JUMP_POWER_X = 150;
     public static inline var JUMP_POWER_Y = 150;
-    public static inline var TIME_BETWEEN_SHOTS = 2;
+    public static inline var TIME_BETWEEN_SHOTS = 2.5;
     public static inline var SHOT_SPEED = 200;
     public static inline var SHOT_SPREAD = 25;
 
     private var isOnGround:Bool;
     private var shootTimer:FlxTimer;
+    private var shotAngle:Float;
+    private var shootSfx:FlxSound;
+    private var lockOnSfx:FlxSound;
 
     public function new(x:Int, y:Int, player:Player) {
         super(x, y, player);
         loadGraphic('assets/images/guardian.png', true, 16, 16);
+        shootSfx = FlxG.sound.load('assets/sounds/tripleshot.wav');
+        lockOnSfx = FlxG.sound.load('assets/sounds/lockon.wav');
+        shootSfx.volume = 0.28;
         animation.add('red', [0]);
         animation.add('green', [1]);
         animation.add('off', [2]);
@@ -30,25 +37,32 @@ class Guardian extends Enemy
 
     override public function update(elapsed:Float)
     {
-        if(shootTimer.progress < 0.1) {
-            animation.play('red');
+        if(!isActive) {
+            animation.play('blue');
         }
-        if(isActive) {
-            animation.play('green');
+        if(shootTimer.progress > 0.80) {
+            if(animation.name == 'green') {
+                setTarget();
+                lockOnSfx.play();
+                animation.play('red');
+            }
         }
         else {
-            animation.play('off');
+            animation.play('green');
         }
         super.update(elapsed);
     }
 
+    private function setTarget() {
+        shotAngle = FlxAngle.angleBetween(this, player, true);
+    }
+
     private function shoot(_:FlxTimer) {
-        if(!isActive || !isOnScreen()) {
+        if(!isActive || !isOnScreen() || !alive) {
             return;
         }
-        var angle = FlxAngle.angleBetween(this, player, true);
         for(i in 0...3) {
-            var spreadAngle = angle + new FlxRandom().float(
+            var spreadAngle = shotAngle + new FlxRandom().float(
                 -SHOT_SPREAD, SHOT_SPREAD
             );
             var bulletVelocity = FlxVelocity.velocityFromAngle(
@@ -59,7 +73,7 @@ class Guardian extends Enemy
             );
             FlxG.state.add(bullet);
         }
-        //shootSfx.play();
+        shootSfx.play();
     }
 
     override public function activate() {
