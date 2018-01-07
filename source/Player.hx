@@ -67,6 +67,8 @@ class Player extends FlxSprite
         animation.add('run_up', [6, 7, 8]);
         animation.add('jump_up', [9]);
         animation.add('jump_down', [10]);
+        animation.add('down', [11]);
+        animation.add('run_down', [12, 13, 14]);
         animation.play('idle');
 
         isOnGround = false;
@@ -130,7 +132,7 @@ class Player extends FlxSprite
         shotCooldown.reset(SHOT_COOLDOWN);
         shootSfx.play(true);
         var bulletVelocity = new FlxPoint(0, 0);
-        if(!isOnGround && isLookingDown) {
+        if(isLookingDown) {
             bulletVelocity.y = SHOT_SPEED;
         }
         else if(isLookingUp) {
@@ -242,7 +244,7 @@ class Player extends FlxSprite
     private function animate()
     {
         if(!isOnGround) {
-            if (isLookingDown) {
+            if(isLookingDown) {
                 animation.play('jump_down');
             }
             else if(isLookingUp) {
@@ -256,6 +258,9 @@ class Player extends FlxSprite
             if(isLookingUp) {
                 animation.play('run_up');
             }
+            else if(isLookingDown) {
+                animation.play('run_down');
+            }
             else {
                 animation.play('run');
             }
@@ -263,6 +268,9 @@ class Player extends FlxSprite
         else {
             if(isLookingUp) {
                 animation.play('up');
+            }
+            else if(isLookingDown) {
+                animation.play('down');
             }
             else {
                 animation.play('idle');
