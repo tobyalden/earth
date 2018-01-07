@@ -26,8 +26,8 @@ class PlayState extends FlxState
     private var option:Option;
 
     public var levelCompleteSfx:FlxSound;
+    private var levelDeco:LevelDeco;
 
-    // TODO: Make it so the player can aim downwards while standing
     // TODO: Randomly flip levels horizontally
     // TODO: Move sound effects into static variables
     // TODO: Fix bug where enemies with downward velocity spawn through the floor
@@ -134,6 +134,8 @@ class PlayState extends FlxState
             add(trap);
         }
 
+        levelDeco = new LevelDeco(Std.int(entrance.x), Std.int(entrance.y));
+        add(levelDeco);
     }
 
     public function getNotGhosts() {
