@@ -14,6 +14,7 @@ class Enemy extends FlxSprite
 
     public var isActive:Bool;
     public var ghost:Bool;
+    private var damageOnTouch:Bool;
     private var canFly:Bool;
     private var player:Player;
     private var startLocation:FlxPoint;
@@ -28,6 +29,7 @@ class Enemy extends FlxSprite
         all.add(this);
         canFly = false;
         isActive = false;
+        damageOnTouch = true;
         placement = FlxObject.NONE;
         ghost = false;
         hitSfx = FlxG.sound.load('assets/sounds/enemyhit.ogg');
@@ -103,5 +105,9 @@ class Enemy extends FlxSprite
 
     public function isGhost() {
         return ghost;
+    }
+
+    public function willDamageOnTouch() {
+        return damageOnTouch;
     }
 }

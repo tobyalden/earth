@@ -1,6 +1,7 @@
 package;
 
 import flixel.*;
+import flixel.effects.*;
 import flixel.group.*;
 import flixel.math.*;
 import flixel.system.*;
@@ -29,15 +30,21 @@ class Guardian extends Enemy
         animation.add('red', [0]);
         animation.add('green', [1]);
         animation.add('off', [2]);
+        animation.add('broken', [3]);
         animation.play('off');
         shootTimer = new FlxTimer();
         health = 5;
         placement = FlxObject.FLOOR;
+        damageOnTouch = false;
+        immovable = true;
     }
 
     override public function update(elapsed:Float)
     {
-        if(!isActive) {
+        if(health <= 0) {
+            animation.play('broken');
+        }
+        else if(!isActive) {
             animation.play('off');
         }
         else if(shootTimer.progress > 0.80) {
@@ -57,8 +64,19 @@ class Guardian extends Enemy
         shotAngle = FlxAngle.angleBetween(this, player, true);
     }
 
+    override public function takeHit(damage:Int) {
+        health -= damage;
+        if(health <= 0) {
+            deathSfx.play();
+        }
+        else {
+            hitSfx.play();
+            FlxFlicker.flicker(this, 0.25);
+        }
+    }
+
     private function shoot(_:FlxTimer) {
-        if(!isActive || !isOnScreen() || !alive) {
+        if(!isActive || !isOnScreen() || health <= 0) {
             return;
         }
         for(i in 0...3) {

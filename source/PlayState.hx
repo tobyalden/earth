@@ -290,8 +290,8 @@ class PlayState extends FlxState
             );
         }
 
-        // Damage player
-        for(danger in [Enemy.all, EnemyBullet.all, TrapExplosion.all]) {
+        // Collide player with bullets and traps
+        for(danger in [EnemyBullet.all, TrapExplosion.all]) {
             FlxG.overlap(
                 player, danger,
                 function(_:FlxObject, _:FlxObject) {
@@ -299,6 +299,20 @@ class PlayState extends FlxState
                 }
             );
         }
+
+        // Collide player with enemies
+        FlxG.overlap(
+            player, Enemy.all,
+            function(_:FlxObject, enemy:FlxObject) {
+                if(cast(enemy, Enemy).willDamageOnTouch()) {
+                    player.takeHit();
+                }
+                else {
+                    FlxG.collide(player, enemy);
+                }
+            }
+        );
+
 
         // Handle traps
         FlxG.overlap(
