@@ -12,8 +12,8 @@ class PlayState extends FlxState
 {
     public static inline var MAX_LEVEL_INDEX = 10;
     public static inline var MIN_ENEMY_DISTANCE = 100;
-    public static inline var NUMBER_OF_ENEMIES = 10;
-    public static inline var NUMBER_OF_TRAPS = 10;
+    public static inline var NUMBER_OF_ENEMIES = 7;
+    public static inline var NUMBER_OF_TRAPS = 5;
 
     private var level:Level;
     private var currentSegment:Segment;
@@ -39,7 +39,7 @@ class PlayState extends FlxState
         super.create();
 
         levelCompleteSfx = FlxG.sound.load('assets/sounds/levelcomplete.ogg');
-        depth = 8;
+        depth = 1;
 
         var rand = FlxG.random.int(0, MAX_LEVEL_INDEX);
         var levelPath = 'assets/data/levels/' + rand + '.png';
@@ -105,19 +105,7 @@ class PlayState extends FlxState
             option = null;
         }
 
-        // Add enemies
-        for(i in 0...NUMBER_OF_ENEMIES) {
-            var enemy:Enemy;
-            //if(new FlxRandom().bool()) {
-                //enemy = new Parasite(0, 0, player);
-            //}
-            //else {
-                enemy = new Guardian(0, 0, player);
-            //}
-            var location = level.getEnemyLocation(enemy.getPlacement());
-            enemy.setPosition(Std.int(location.x), Std.int(location.y + 8));
-            add(enemy);
-        }
+        addEnemies();
 
         // Add water
         for(segment in segments) {
@@ -141,6 +129,32 @@ class PlayState extends FlxState
             Std.int(entrance.x), Std.int(entrance.y), depth
         );
         add(depthDisplay);
+    }
+
+    private function addEnemies() {
+        for(i in 0...(NUMBER_OF_ENEMIES + depth)) {
+            var rand = new FlxRandom().int(1, depth + 5);
+            trace(rand);
+            var enemy:Enemy;
+            if(rand <= 3) {
+                enemy = new Parasite(0, 0, player);
+            }
+            else if(rand == 4) {
+                enemy = new Jumper(0, 0, player);
+            }
+            else if(rand == 5) {
+                enemy = new Seer(0, 0, player);
+            }
+            else if(rand == 6) {
+                enemy = new Guardian(0, 0, player);
+            }
+            else {
+                enemy = new Parasite(0, 0, player);
+            }
+            var location = level.getEnemyLocation(enemy.getPlacement());
+            enemy.setPosition(Std.int(location.x), Std.int(location.y + 8));
+            add(enemy);
+        }
     }
 
     public function getNotGhosts() {
