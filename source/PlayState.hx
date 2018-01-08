@@ -25,8 +25,10 @@ class PlayState extends FlxState
     private var secretPlayer:SecretPlayer;
     private var option:Option;
 
+
     public var levelCompleteSfx:FlxSound;
-    private var levelDeco:LevelDeco;
+    private var depth:Int;
+    private var depthDisplay:DepthDisplay;
 
     // TODO: Randomly flip levels horizontally
     // TODO: Move sound effects into static variables
@@ -37,6 +39,7 @@ class PlayState extends FlxState
         super.create();
 
         levelCompleteSfx = FlxG.sound.load('assets/sounds/levelcomplete.ogg');
+        depth = 8;
 
         var rand = FlxG.random.int(0, MAX_LEVEL_INDEX);
         var levelPath = 'assets/data/levels/' + rand + '.png';
@@ -134,8 +137,10 @@ class PlayState extends FlxState
             add(trap);
         }
 
-        levelDeco = new LevelDeco(Std.int(entrance.x), Std.int(entrance.y));
-        add(levelDeco);
+        depthDisplay = new DepthDisplay(
+            Std.int(entrance.x), Std.int(entrance.y), depth
+        );
+        add(depthDisplay);
     }
 
     public function getNotGhosts() {
