@@ -30,7 +30,7 @@ class Segment extends FlxTilemap
         }
     }
 
-    public function getDecorativeTiles() {
+    public function getDecorativeTiles(depth:Int) {
         decorativeTiles = new FlxTilemap();
         decorativeTiles.x = x;
         decorativeTiles.y = y;
@@ -49,7 +49,7 @@ class Segment extends FlxTilemap
             }
         }
         decorativeTiles.loadMapFromArray(
-            data, widthInTiles, heightInTiles, 'assets/images/stonebig.png',
+            data, widthInTiles, heightInTiles, 'assets/images/stonebig${depth}.png',
             16, 16, 0, 0
         );
         return decorativeTiles;

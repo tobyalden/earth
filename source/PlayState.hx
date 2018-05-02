@@ -39,7 +39,7 @@ class PlayState extends FlxState
         super.create();
 
         levelCompleteSfx = FlxG.sound.load('assets/sounds/levelcomplete.ogg');
-        depth = 1;
+        depth = 3;
 
         var rand = FlxG.random.int(0, MAX_LEVEL_INDEX);
         var levelPath = 'assets/data/levels/' + rand + '.png';
@@ -54,7 +54,7 @@ class PlayState extends FlxState
 
 
         var backdrop = new FlxSprite(
-            0, 0, 'assets/images/backgroundbig.png'
+            0, 0, 'assets/images/backgroundbig${depth}.png'
         );
         add(backdrop);
         var segments = new Array<Segment>();
@@ -62,7 +62,7 @@ class PlayState extends FlxState
             segments.push(cast(segment, Segment));
         }
         for(segment in segments) {
-            add(segment.getDecorativeTiles());
+            add(segment.getDecorativeTiles(depth));
         }
         for(segment in segments) {
             segment.alpha = 0.80;
