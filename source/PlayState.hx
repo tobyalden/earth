@@ -33,13 +33,14 @@ class PlayState extends FlxState
     // TODO: Randomly flip levels horizontally
     // TODO: Move sound effects into static variables
     // TODO: Fix bug where enemies with downward velocity spawn through the floor
+    // TODO: Fix bug where water can spawn on the edge of a level
 
     override public function create():Void
     {
         super.create();
 
         levelCompleteSfx = FlxG.sound.load('assets/sounds/levelcomplete.ogg');
-        depth = 3;
+        depth = 1;
 
         var rand = FlxG.random.int(0, MAX_LEVEL_INDEX);
         var levelPath = 'assets/data/levels/' + rand + '.png';
@@ -62,7 +63,9 @@ class PlayState extends FlxState
             segments.push(cast(segment, Segment));
         }
         for(segment in segments) {
-            add(segment.getDecorativeTiles(depth));
+            for(decorativeTiles in segment.getDecorativeTiles(depth)) {
+                add(decorativeTiles);
+            }
         }
         for(segment in segments) {
             segment.alpha = 0.80;

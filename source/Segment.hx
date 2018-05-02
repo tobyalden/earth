@@ -10,7 +10,7 @@ class Segment extends FlxTilemap
     public static var all:FlxGroup = new FlxGroup();
 
     public var special:Bool;
-    public var decorativeTiles:FlxTilemap;
+    public var decorativeTiles:Array<FlxTilemap>;
 
     public function new(path:String, special:Bool=false)
     {
@@ -20,6 +20,7 @@ class Segment extends FlxTilemap
         loadMapFromGraphic(
             path, false, 1, 'assets/images/tiles.png', 16, 16, AUTO
         );
+        decorativeTiles = new Array<FlxTilemap>();
     }
 
     public function getRandomPosition() {
@@ -31,9 +32,9 @@ class Segment extends FlxTilemap
     }
 
     public function getDecorativeTiles(depth:Int) {
-        decorativeTiles = new FlxTilemap();
-        decorativeTiles.x = x;
-        decorativeTiles.y = y;
+        var stoneTiles = new FlxTilemap();
+        stoneTiles.x = x;
+        stoneTiles.y = y;
         var data = getData(true);
         for(tileX in 0...widthInTiles) {
             for(tileY in 0...heightInTiles) {
@@ -48,10 +49,33 @@ class Segment extends FlxTilemap
                 }
             }
         }
-        decorativeTiles.loadMapFromArray(
+        stoneTiles.loadMapFromArray(
             data, widthInTiles, heightInTiles, 'assets/images/stonebig${depth}.png',
             16, 16, 0, 0
         );
+        decorativeTiles.push(stoneTiles);
+
+        var grassTiles = new FlxTilemap();
+        grassTiles.x = x;
+        grassTiles.y = y;
+        var data = getData(true);
+        for(tileX in 0...widthInTiles) {
+            for(tileY in 0...heightInTiles) {
+                var tileIndex = tileX + tileY * widthInTiles;
+                if(getTile(tileX, tileY) == 0 && getTile(tileX, tileY + 1) > 0) {
+                    data[tileIndex] = tileX;
+                }
+                else {
+                    data[tileIndex] = -1;
+                }
+            }
+        }
+        grassTiles.loadMapFromArray(
+            data, widthInTiles, heightInTiles, 'assets/images/grass.png',
+            16, 16, 0, 0
+        );
+        decorativeTiles.push(grassTiles);
+
         return decorativeTiles;
     }
 
@@ -83,6 +107,9 @@ class Segment extends FlxTilemap
                             tileCount * Level.TILE_SIZE
                         );
                         waters.push(water);
+                        for(clearTileX in tileX...(tileX + tileCount)) {
+                            decorativeTiles[1].setTile(clearTileX, tileY, -1);
+                        }
                         break;
                     }
                 }
