@@ -63,11 +63,6 @@ class PlayState extends FlxState
             segments.push(cast(segment, Segment));
         }
         for(segment in segments) {
-            for(decorativeTiles in segment.getDecorativeTiles(depth)) {
-                add(decorativeTiles);
-            }
-        }
-        for(segment in segments) {
             segment.alpha = 0.80;
             //segment.useScaleHack = false;
             add(segment);
@@ -108,7 +103,23 @@ class PlayState extends FlxState
             option = null;
         }
 
+
+        // Add enemies and traps
         addEnemies();
+        for(i in 0...NUMBER_OF_TRAPS) {
+            var location = level.getEnemyLocation(FlxObject.FLOOR);
+            var trap = new Mine(
+                Std.int(location.x), Std.int(location.y), player
+            );
+            add(trap);
+        }
+
+        // Add decorations
+        for(segment in segments) {
+            for(decorativeTiles in segment.getDecorativeTiles(depth)) {
+                add(decorativeTiles);
+            }
+        }
 
         // Add water
         for(segment in segments) {
@@ -117,15 +128,6 @@ class PlayState extends FlxState
                 water.alpha = 0.5;
                 add(water);
             }
-        }
-
-        // Add traps
-        for(i in 0...NUMBER_OF_TRAPS) {
-            var location = level.getEnemyLocation(FlxObject.FLOOR);
-            var trap = new Mine(
-                Std.int(location.x), Std.int(location.y), player
-            );
-            add(trap);
         }
 
         depthDisplay = new DepthDisplay(

@@ -108,6 +108,7 @@ class Segment extends FlxTilemap
                         );
                         waters.push(water);
                         for(clearTileX in tileX...(tileX + tileCount)) {
+                            // Remove any grass tiles in the water
                             decorativeTiles[1].setTile(clearTileX, tileY, -1);
                         }
                         break;
