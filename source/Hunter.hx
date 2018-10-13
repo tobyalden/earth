@@ -45,10 +45,10 @@ class Hunter extends Enemy
             velocity.y = -(JUMP_STRENGTH + 200 * Math.random());
         }
         if(isActive) {
-            animation.play('idle');
+            animation.play('chasing');
         }
         else {
-            animation.play('chasing');
+            animation.play('idle');
         }
     }
 }
